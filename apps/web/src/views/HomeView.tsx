@@ -9,6 +9,7 @@ import { Wrench, MapPin, Zap, ThermometerSnowflake, PaintRoller, Search, Loader2
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
+import { HandymanCard } from "@/components/handyman/HandymanCard";
 
 interface Category {
   id: number;
@@ -49,7 +50,7 @@ const ICON_MAP: Record<string, any> = {
 export default function HomeView({ initialCategories, initialHandymen }: HomeViewProps) {
   const t = useTranslations("home.hero");
 
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await apiClient.get("/categories");
@@ -58,7 +59,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
     initialData: initialCategories,
   });
 
-  const { data: handymen, isLoading: isHandymenLoading } = useQuery({
+  const { data: handymen, isLoading: isHandymenLoading } = useQuery<Handyman[]>({
     queryKey: ["handymen", 12, "top-rated"],
     queryFn: async () => {
       const response = await apiClient.get("/handymen?per_page=12&rating_min=4&sort=rating_avg&order=desc");
@@ -72,10 +73,10 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
       {/* Hero Section */}
       <section className="pt-20 pb-24 flex flex-col items-center justify-center text-center px-6 md:px-16">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary max-w-4xl tracking-tight leading-tight mb-6">
-          Expert Craftsmanship,<br />Delivered to Your Door.
+          {t("title")}
         </h1>
         <p className="text-base text-muted-foreground max-w-2xl mb-12">
-          Connect with premium service providers for meticulous repairs, renovations, and maintenance. Trust built on precision.
+          {t("subtitle")}
         </p>
 
         {/* Search Bar */}
@@ -84,19 +85,19 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
             <Wrench className="w-5 h-5 text-muted-foreground shrink-0" />
             <Input
               className="border-none shadow-none focus-visible:ring-0 px-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto"
-              placeholder="What service do you need?"
+              placeholder={t("searchPlaceholder")}
             />
           </div>
           <div className="flex-1 flex items-center gap-3 px-6 w-full py-3 md:py-0">
             <MapPin className="w-5 h-5 text-muted-foreground shrink-0" />
             <Input
               className="border-none shadow-none focus-visible:ring-0 px-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto"
-              placeholder="Location or Zip Code"
+              placeholder={t("locationPlaceholder")}
             />
           </div>
           <Button className="w-full md:w-auto rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-7 text-base font-semibold shadow-md shrink-0 flex items-center gap-2">
             <Search className="w-4 h-4" />
-            Find a Handyman
+            {t("ctaSearch")}
           </Button>
         </div>
       </section>
@@ -106,7 +107,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
         <div className="container mx-auto">
           <h2 className="text-4xl font-heading font-bold text-center text-primary mb-12">All Categories</h2>
 
-          {isCategoriesLoading ? (
+          {(isCategoriesLoading && !categories) ? (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
             </div>
@@ -143,6 +144,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
             </Button>
           </div>
 
+
           {isHandymenLoading && !handymen ? (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -150,48 +152,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {handymen?.map((h) => (
-                <Card key={h.id} className="group overflow-hidden rounded-[2rem] border border-border bg-white hover:shadow-xl transition-all duration-500">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      src={h.photo_profile || "/images/placeholder-avatar.png"}
-                      alt={h.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      unoptimized
-                    />
-                    {h.is_premium && (
-                      <div className="absolute top-4 left-4 bg-secondary text-secondary-foreground px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
-                        Premium
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-1.5">
-                        <Star className="w-4 h-4 fill-secondary text-secondary" />
-                        <span className="font-bold text-sm">{h.rating_avg}</span>
-                        <span className="text-muted-foreground text-xs">({h.review_count})</span>
-                      </div>
-                      {h.is_verified && (
-                        <CheckCircle2 className="w-4 h-4 text-blue-500" />
-                      )}
-                    </div>
-                    <h4 className="font-heading font-bold text-xl text-primary mb-1 truncate group-hover:text-secondary transition-colors">
-                      {h.name}
-                    </h4>
-                    <p className="text-muted-foreground text-sm flex items-center gap-1 mb-4">
-                      <MapPin className="w-3 h-3" />
-                      {h.city?.name}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {h.categories?.slice(0, 2).map((cat) => (
-                        <span key={cat.id} className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground bg-muted px-2 py-1 rounded">
-                          {cat.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </Card>
+                <HandymanCard key={h.id} handyman={h} />
               ))}
             </div>
           )}

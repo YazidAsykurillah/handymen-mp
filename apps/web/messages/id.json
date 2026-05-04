@@ -17,16 +17,21 @@
   },
   "nav": {
     "findHandyman": "Cari Tukang",
+    "explore": "Jelajahi",
+    "projects": "Proyek",
     "login": "Masuk",
+    "signIn": "Masuk",
     "register": "Daftar",
     "dashboard": "Dashboard",
     "account": "Akun Saya"
   },
   "home": {
     "hero": {
-      "title": "Temukan Tukang Terpercaya",
-      "subtitle": "Ribuan tukang profesional siap membantu kebutuhan rumah Anda",
-      "searchPlaceholder": "Cari tukang listrik, plumbing, cat..."
+      "title": "Keahlian Profesional, Langsung ke Pintu Anda.",
+      "subtitle": "Terhubung dengan penyedia jasa premium untuk perbaikan, renovasi, dan pemeliharaan yang teliti. Kepercayaan yang dibangun di atas presisi.",
+      "searchPlaceholder": "Layanan apa yang Anda butuhkan?",
+      "locationPlaceholder": "Lokasi atau Kode Pos",
+      "ctaSearch": "Cari Tukang"
     }
   },
   "handyman": {

@@ -12,6 +12,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Handyman extends Model
 {
     use SoftDeletes, HasFactory;
+    
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($model) {
+            if ($model->isDirty('photo_profile')) {
+                $oldPhoto = $model->getOriginal('photo_profile');
+                if ($oldPhoto && $oldPhoto !== 'handymen/placeholder.png') {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPhoto);
+                }
+            }
+        });
+
+        static::deleted(function ($model) {
+            if ($model->isForceDeleting()) {
+                if ($model->photo_profile && $model->photo_profile !== 'handymen/placeholder.png') {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($model->photo_profile);
+                }
+            }
+        });
+    }
 
     protected $fillable = [
         'user_id', 'city_id', 'province_id',

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Globe, Menu } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import {
   Sheet,
@@ -14,11 +14,12 @@ import {
 
 export default function Navbar() {
   const locale = useLocale();
+  const t = useTranslations("nav");
   const pathname = usePathname();
 
   const navLinks = [
-    { href: "/explore", label: "Explore" },
-    { href: "/projects", label: "Projects" },
+    { href: "/explore", label: t("explore") },
+    { href: "/projects", label: t("projects") },
   ];
 
   return (
@@ -76,7 +77,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3 sm:gap-6">
           <Link href="/auth/login">
             <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-6 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
-              Sign In
+              {t("signIn")}
             </Button>
           </Link>
 

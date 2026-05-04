@@ -38,7 +38,10 @@ class HandymanForm
                     Textarea::make('bio')->columnSpanFull(),
                     TextInput::make('phone'),
                     TextInput::make('whatsapp'),
-                    FileUpload::make('photo_profile')->image(),
+                    FileUpload::make('photo_profile')
+                        ->image()
+                        ->disk('public')
+                        ->directory('handymen'),
                 ])->columns(2),
 
                 Section::make('Location')->components([

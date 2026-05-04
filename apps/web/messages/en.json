@@ -17,16 +17,21 @@
   },
   "nav": {
     "findHandyman": "Find Handyman",
+    "explore": "Explore",
+    "projects": "Projects",
     "login": "Login",
+    "signIn": "Sign In",
     "register": "Register",
     "dashboard": "Dashboard",
     "account": "My Account"
   },
   "home": {
     "hero": {
-      "title": "Find Trusted Handymen",
-      "subtitle": "Thousands of professional handymen ready to help with your home needs",
-      "searchPlaceholder": "Search electrician, plumbing, painting..."
+      "title": "Expert Craftsmanship, Delivered to Your Door.",
+      "subtitle": "Connect with premium service providers for meticulous repairs, renovations, and maintenance. Trust built on precision.",
+      "searchPlaceholder": "What service do you need?",
+      "locationPlaceholder": "Location or Zip Code",
+      "ctaSearch": "Find a Handyman"
     }
   },
   "handyman": {
