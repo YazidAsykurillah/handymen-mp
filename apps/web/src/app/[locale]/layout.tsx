@@ -1,0 +1,62 @@
+import type { Metadata } from "next";
+import { Inter, Outfit } from "next/font/google";
+import { getMessages } from "next-intl/server";
+import { Providers } from "@/components/providers/Providers";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const messages: any = await getMessages();
+  const t = messages.home?.hero;
+
+  return {
+    title: locale === "id" ? "Handyman - Temukan Tukang Terpercaya" : "Handyman - Find Trusted Handymen",
+    description: locale === "id" 
+      ? "Platform untuk menemukan tukang profesional di Indonesia"
+      : "Platform to find professional handymen in Indonesia",
+  };
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const messages = await getMessages();
+
+  return (
+    <html
+      lang={locale}
+      className={`${inter.variable} ${outfit.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        <Providers locale={locale} messages={messages}>
+          <Navbar />
+          <div className="flex-1 flex flex-col relative min-h-0">
+            {children}
+          </div>
+          <Footer />
+        </Providers>
+      </body>
+    </html>
+  );
+}

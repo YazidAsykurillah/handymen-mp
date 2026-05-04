@@ -1,0 +1,69 @@
+{
+  "common": {
+    "search": "Cari",
+    "filter": "Filter",
+    "loading": "Memuat...",
+    "noResults": "Tidak ada hasil ditemukan",
+    "viewProfile": "Lihat Profil",
+    "verified": "Terverifikasi",
+    "premium": "Premium",
+    "rating": "Rating",
+    "reviews": "ulasan",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "logout": "Keluar"
+  },
+  "nav": {
+    "findHandyman": "Cari Tukang",
+    "login": "Masuk",
+    "register": "Daftar",
+    "dashboard": "Dashboard",
+    "account": "Akun Saya"
+  },
+  "home": {
+    "hero": {
+      "title": "Temukan Tukang Terpercaya",
+      "subtitle": "Ribuan tukang profesional siap membantu kebutuhan rumah Anda",
+      "searchPlaceholder": "Cari tukang listrik, plumbing, cat..."
+    }
+  },
+  "handyman": {
+    "categories": "Kategori Layanan",
+    "location": "Lokasi",
+    "portfolio": "Portofolio",
+    "contactViaWhatsapp": "Hubungi via WhatsApp",
+    "writeReview": "Tulis Ulasan"
+  },
+  "auth": {
+    "login": "Masuk",
+    "register": "Daftar",
+    "registerAsHandyman": "Daftar sebagai Tukang",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "name": "Nama Lengkap",
+    "phone": "Nomor Telepon",
+    "forgotPassword": "Lupa kata sandi?"
+  },
+  "review": {
+    "title": "Ulasan",
+    "writeReview": "Tulis Ulasan",
+    "rating": "Penilaian",
+    "comment": "Komentar",
+    "submit": "Kirim Ulasan",
+    "pendingApproval": "Ulasan Anda sedang menunggu persetujuan."
+  },
+  "dashboard": {
+    "title": "Dashboard Tukang",
+    "profile": "Profil Saya",
+    "portfolios": "Portofolio",
+    "categories": "Kategori Layanan",
+    "verificationPending": "Profil Anda sedang dalam proses verifikasi."
+  },
+  "account": {
+    "title": "Akun Saya",
+    "profile": "Edit Profil",
+    "reviews": "Ulasan Saya"
+  }
+}

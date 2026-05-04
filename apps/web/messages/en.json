@@ -1,0 +1,69 @@
+{
+  "common": {
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "viewProfile": "View Profile",
+    "verified": "Verified",
+    "premium": "Premium",
+    "rating": "Rating",
+    "reviews": "reviews",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "logout": "Logout"
+  },
+  "nav": {
+    "findHandyman": "Find Handyman",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "account": "My Account"
+  },
+  "home": {
+    "hero": {
+      "title": "Find Trusted Handymen",
+      "subtitle": "Thousands of professional handymen ready to help with your home needs",
+      "searchPlaceholder": "Search electrician, plumbing, painting..."
+    }
+  },
+  "handyman": {
+    "categories": "Service Categories",
+    "location": "Location",
+    "portfolio": "Portfolio",
+    "contactViaWhatsApp": "Contact via WhatsApp",
+    "writeReview": "Write a Review"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "registerAsHandyman": "Register as Handyman",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "forgotPassword": "Forgot password?"
+  },
+  "review": {
+    "title": "Reviews",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "comment": "Comment",
+    "submit": "Submit Review",
+    "pendingApproval": "Your review is pending approval."
+  },
+  "dashboard": {
+    "title": "Handyman Dashboard",
+    "profile": "My Profile",
+    "portfolios": "Portfolio",
+    "categories": "Service Categories",
+    "verificationPending": "Your profile is pending verification."
+  },
+  "account": {
+    "title": "My Account",
+    "profile": "Edit Profile",
+    "reviews": "My Reviews"
+  }
+}

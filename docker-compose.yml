@@ -1,0 +1,97 @@
+services:
+  # PHP Service (API)
+  app:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      args:
+        user: handyman
+        uid: 1000
+    image: handyman-api
+    container_name: handyman-api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./apps/api:/var/www
+    networks:
+      - handyman-network
+      - web-gateway
+
+  # Nginx Service (Gateway for API)
+  api-gateway-handyman:
+    image: nginx:alpine
+    container_name: api-gateway-handyman
+    restart: unless-stopped
+    volumes:
+      - ./apps/api:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - handyman-network
+      - web-gateway
+    depends_on:
+      - app
+
+  # Next.js Service (Frontend)
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: handyman-web
+    container_name: handyman-web
+    restart: unless-stopped
+    volumes:
+      - .:/var/www
+    working_dir: /var/www/apps/web
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api.handyman.local/api
+      - NEXT_PUBLIC_APP_URL=http://handyman.local
+    networks:
+      - handyman-network
+      - web-gateway
+
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: handyman-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - handyman-db:/var/lib/mysql
+    networks:
+      - handyman-network
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: handyman-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8092:80"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=${DB_PASSWORD:-secret}
+    networks:
+      - handyman-network
+    depends_on:
+      - db
+
+networks:
+  handyman-network:
+    driver: bridge
+  web-gateway:
+    external: true
+
+volumes:
+  handyman-db:
+    driver: local
