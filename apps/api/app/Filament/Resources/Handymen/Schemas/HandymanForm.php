@@ -49,9 +49,16 @@ class HandymanForm
                         ->relationship('province', 'name')
                         ->searchable()
                         ->preload()
-                        ->live(),
+                        ->live()
+                        ->afterStateUpdated(fn (Set $set) => $set('city_id', null)),
                     Select::make('city_id')
-                        ->relationship('city', 'name')
+                        ->relationship('city', 'name', fn ($query, $get) => $query->where('province_id', $get('province_id')))
+                        ->searchable()
+                        ->preload()
+                        ->live()
+                        ->afterStateUpdated(fn (Set $set) => $set('district_id', null)),
+                    Select::make('district_id')
+                        ->relationship('district', 'name', fn ($query, $get) => $query->where('city_id', $get('city_id')))
                         ->searchable()
                         ->preload(),
                     TextInput::make('address'),

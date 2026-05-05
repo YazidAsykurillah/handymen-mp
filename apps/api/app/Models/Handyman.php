@@ -36,7 +36,7 @@ class Handyman extends Model
     }
 
     protected $fillable = [
-        'user_id', 'city_id', 'province_id',
+        'user_id', 'district_id', 'city_id', 'province_id',
         'name', 'slug', 'bio', 'phone', 'whatsapp',
         'photo_profile', 'address',
         'latitude', 'longitude',
@@ -56,6 +56,11 @@ class Handyman extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class);
     }
 
     public function city(): BelongsTo

@@ -1,8 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Wrench, MapPin, Zap, ThermometerSnowflake, PaintRoller, Search, Loader2, Star, CheckCircle2 } from "lucide-react";
@@ -10,6 +18,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { HandymanCard } from "@/components/handyman/HandymanCard";
+import { LocationAutocomplete } from "@/components/home/LocationAutocomplete";
 
 interface Category {
   id: number;
@@ -49,6 +58,11 @@ const ICON_MAP: Record<string, any> = {
 
 export default function HomeView({ initialCategories, initialHandymen }: HomeViewProps) {
   const t = useTranslations("home.hero");
+  const router = useRouter();
+
+  // Search State
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedLocation, setSelectedLocation] = useState<{ province_id: number; city_id: number } | null>(null);
 
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<Category[]>({
     queryKey: ["categories"],
@@ -68,6 +82,17 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
     initialData: initialHandymen,
   });
 
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (selectedCategory !== "all") params.append("category", selectedCategory);
+    if (selectedLocation) {
+      params.append("province_id", selectedLocation.province_id.toString());
+      params.append("city_id", selectedLocation.city_id.toString());
+    }
+    
+    router.push(`/explore?${params.toString()}`);
+  };
+
   return (
     <main className="flex-1 flex flex-col bg-background">
       {/* Hero Section */}
@@ -80,22 +105,34 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
         </p>
 
         {/* Search Bar */}
-        <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-border p-2 flex flex-col md:flex-row items-center gap-2 relative z-10">
-          <div className="flex-1 flex items-center gap-3 px-6 w-full border-b md:border-b-0 md:border-r border-border py-3 md:py-0">
+        <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-border p-2 flex flex-col md:flex-row items-center relative z-20">
+          <div className="flex-1 flex items-center gap-3 px-6 w-full border-b md:border-b-0 md:border-r border-border py-3 md:py-0 h-[64px]">
             <Wrench className="w-5 h-5 text-muted-foreground shrink-0" />
-            <Input
-              className="border-none shadow-none focus-visible:ring-0 px-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto"
-              placeholder={t("searchPlaceholder")}
-            />
+            <Select value={selectedCategory} onValueChange={(val) => setSelectedCategory(val || "all")}>
+              <SelectTrigger className="border-none shadow-none focus:ring-0 p-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto w-full flex justify-between">
+                <SelectValue placeholder={t("searchPlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Services</SelectItem>
+                {categories?.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="flex-1 flex items-center gap-3 px-6 w-full py-3 md:py-0">
-            <MapPin className="w-5 h-5 text-muted-foreground shrink-0" />
-            <Input
-              className="border-none shadow-none focus-visible:ring-0 px-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto"
+          
+          <div className="flex-1 w-full px-6 h-[64px]">
+            <LocationAutocomplete 
+              onSelect={setSelectedLocation}
               placeholder={t("locationPlaceholder")}
+              className="h-full"
             />
           </div>
-          <Button className="w-full md:w-auto rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-7 text-base font-semibold shadow-md shrink-0 flex items-center gap-2">
+
+          <Button 
+            onClick={handleSearch}
+            className="w-full md:w-auto rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-7 text-base font-semibold shadow-md shrink-0 flex items-center gap-2"
+          >
             <Search className="w-4 h-4" />
             {t("ctaSearch")}
           </Button>
@@ -135,7 +172,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
           <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
             <div className="max-w-2xl">
               <h2 className="text-4xl font-heading font-bold text-primary mb-4">Top Rated Handymen</h2>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-base">
                 Discover the elite of our marketplace. Verified professionals with consistent 5-star delivery.
               </p>
             </div>
@@ -182,7 +219,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
               <h3 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-white mb-4 leading-tight">
                 Precision Installation
               </h3>
-              <p className="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed">
+              <p className="text-white/80 text-base sm:text-lg md:text-base leading-relaxed">
                 Experience the difference of white-glove service for your next home upgrade.
               </p>
             </div>

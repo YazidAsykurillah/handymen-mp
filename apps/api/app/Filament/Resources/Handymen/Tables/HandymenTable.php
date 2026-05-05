@@ -22,8 +22,9 @@ class HandymenTable
                     ->disk('public')
                     ->circular(),
                 TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('city.name')->sortable(),
                 TextColumn::make('province.name')->sortable(),
+                TextColumn::make('city.name')->sortable(),
+                TextColumn::make('district.name')->sortable(),
                 IconColumn::make('is_verified')->boolean(),
                 IconColumn::make('is_premium')->boolean(),
                 IconColumn::make('is_active')->boolean(),

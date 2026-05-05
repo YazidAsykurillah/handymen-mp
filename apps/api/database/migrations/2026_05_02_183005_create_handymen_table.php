@@ -14,8 +14,13 @@ return new class extends Migration
         Schema::create('handymen', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('city_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('province_id')->nullable()->constrained()->nullOnDelete();
+            $table->unsignedBigInteger('province_id')->nullable();
+            $table->unsignedBigInteger('city_id')->nullable();
+            $table->unsignedBigInteger('district_id')->nullable();
+            
+            $table->foreign('province_id')->references('id')->on('provinces')->nullOnDelete();
+            $table->foreign('city_id')->references('id')->on('cities')->nullOnDelete();
+            $table->foreign('district_id')->references('id')->on('districts')->nullOnDelete();
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('bio')->nullable();

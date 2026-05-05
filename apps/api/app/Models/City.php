@@ -11,11 +11,18 @@ class City extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['province_id', 'name', 'type'];
+    public $incrementing = false;
+
+    protected $fillable = ['id', 'province_id', 'name'];
 
     public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class);
+    }
+
+    public function districts(): HasMany
+    {
+        return $this->hasMany(District::class);
     }
 
     public function handymen(): HasMany

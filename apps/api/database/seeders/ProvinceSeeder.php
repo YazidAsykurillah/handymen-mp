@@ -4,27 +4,22 @@ namespace Database\Seeders;
 
 use App\Models\Province;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
 
 class ProvinceSeeder extends Seeder
 {
     public function run(): void
     {
-        $provinces = [
-            ['name' => 'DKI Jakarta',          'code' => 'JK'],
-            ['name' => 'Jawa Barat',            'code' => 'JB'],
-            ['name' => 'Jawa Tengah',           'code' => 'JT'],
-            ['name' => 'Jawa Timur',            'code' => 'JI'],
-            ['name' => 'DI Yogyakarta',         'code' => 'YO'],
-            ['name' => 'Banten',                'code' => 'BT'],
-            ['name' => 'Bali',                  'code' => 'BA'],
-            ['name' => 'Sumatera Utara',        'code' => 'SU'],
-            ['name' => 'Sumatera Selatan',      'code' => 'SS'],
-            ['name' => 'Kalimantan Timur',      'code' => 'KI'],
-            ['name' => 'Sulawesi Selatan',      'code' => 'SN'],
-        ];
+        $response = Http::get('https://api-regional-indonesia.vercel.app/api/provinces');
 
-        foreach ($provinces as $province) {
-            Province::firstOrCreate(['code' => $province['code']], $province);
+        if ($response->successful()) {
+            $provinces = $response->json('data');
+            foreach ($provinces as $province) {
+                Province::updateOrCreate(
+                    ['id' => $province['id']],
+                    ['name' => $province['name']]
+                );
+            }
         }
     }
 }

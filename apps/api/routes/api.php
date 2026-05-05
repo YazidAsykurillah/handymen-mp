@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\HandymanController;
 use App\Http\Controllers\Api\HandymanProfileController;
 use App\Http\Controllers\Api\PortfolioController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\LocationSearchController;
 
 Route::get('/ping', fn() => response()->json(['status' => 'ok', 'app' => 'Handyman API']));
 
@@ -54,6 +55,7 @@ Route::middleware(['auth:sanctum', 'role:handyman'])->prefix('handyman')->group(
 Route::get('/categories', [ReferenceDataController::class, 'categories']);
 Route::get('/provinces', [ReferenceDataController::class, 'provinces']);
 Route::get('/cities', [ReferenceDataController::class, 'cities']);
+Route::get('/locations/search', [LocationSearchController::class, 'search']);
 
 // User & Reviews (Protected)
 Route::middleware(['auth:sanctum', 'role:user'])->group(function () {

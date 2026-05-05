@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\District;
 use App\Models\Handyman;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,12 +23,15 @@ class HandymanFactory extends Factory
      */
     public function definition(): array
     {
-        $city = City::inRandomOrder()->first() ?? City::factory()->create();
+        $district = District::with('city.province')->inRandomOrder()->first() ?? District::factory()->create();
+        $city = $district->city;
+        $province = $city->province;
 
         return [
             'user_id' => User::factory(),
+            'district_id' => $district->id,
             'city_id' => $city->id,
-            'province_id' => $city->province_id,
+            'province_id' => $province->id,
             'name' => fn (array $attributes) => User::find($attributes['user_id'])->name,
             'slug' => fn (array $attributes) => Str::slug(User::find($attributes['user_id'])->name) . '-' . $this->faker->unique()->numberBetween(100, 999),
             'bio' => $this->faker->paragraph(),

@@ -20,6 +20,7 @@ interface Handyman {
   is_verified: boolean;
   is_premium: boolean;
   city?: { name: string };
+  province?: { name: string };
   categories?: Category[];
 }
 
@@ -32,7 +33,7 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
 
   return (
     <Link href={`/handymen/${handyman.slug}`}>
-      <Card className="group overflow-hidden rounded-[2rem] border border-border bg-white hover:shadow-xl transition-all duration-500 h-full flex flex-col">
+      <Card className="group overflow-hidden rounded-[2rem] border border-border bg-white hover:shadow-xl transition-all duration-500 h-full flex flex-col p-0 gap-0">
         <div className="relative aspect-[4/5] overflow-hidden">
           <img
             src={profileSrc}
@@ -59,9 +60,9 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
           <h4 className="font-heading font-bold text-xl text-primary mb-1 truncate group-hover:text-secondary transition-colors">
             {handyman.name}
           </h4>
-          <p className="text-muted-foreground text-sm flex items-center gap-1 mb-4">
-            <MapPin className="w-3 h-3" />
-            {handyman.city?.name}
+          <p className="text-muted-foreground text-[13px] flex items-start gap-1 mb-4 leading-tight">
+            <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-secondary" />
+            <span>{handyman.province?.name} - {handyman.city?.name}</span>
           </p>
           <div className="flex flex-wrap gap-2 mt-auto">
             {handyman.categories?.slice(0, 2).map((cat) => (

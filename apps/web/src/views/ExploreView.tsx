@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  Search, 
-  Filter, 
-  X, 
-  ChevronDown, 
-  Star, 
+import {
+  Search,
+  Filter,
+  X,
+  ChevronDown,
+  Star,
   SlidersHorizontal,
   Loader2,
   MapPin,
@@ -77,18 +78,20 @@ interface ExploreViewProps {
 export default function ExploreView({ initialCategories, initialHandymen, initialProvinces }: ExploreViewProps) {
   const t = useTranslations("common");
   const h = useTranslations("handyman");
+
+  const searchParams = useSearchParams();
   
   // Filter States
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [category, setCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("created_at");
-  const [order, setOrder] = useState<string>("desc");
-  const [isVerified, setIsVerified] = useState<string>("all");
-  const [isPremium, setIsPremium] = useState<string>("all");
-  const [minRating, setMinRating] = useState<string>("all");
-  const [provinceId, setProvinceId] = useState<string>("all");
-  const [cityId, setCityId] = useState<string>("all");
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get("search") || "");
+  const [category, setCategory] = useState<string>(searchParams.get("category") || "all");
+  const [sortBy, setSortBy] = useState<string>(searchParams.get("sort") || "created_at");
+  const [order, setOrder] = useState<string>(searchParams.get("order") || "desc");
+  const [isVerified, setIsVerified] = useState<string>(searchParams.get("is_verified") || "all");
+  const [isPremium, setIsPremium] = useState<string>(searchParams.get("is_premium") || "all");
+  const [minRating, setMinRating] = useState<string>(searchParams.get("rating_min") || "all");
+  const [provinceId, setProvinceId] = useState<string>(searchParams.get("province_id") || "all");
+  const [cityId, setCityId] = useState<string>(searchParams.get("city_id") || "all");
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => setIsMounted(true), []);
@@ -116,7 +119,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
       if (provinceId !== "all") params.append("province_id", provinceId);
       if (cityId !== "all") params.append("city_id", cityId);
       params.append("per_page", "12");
-      
+
       const response = await apiClient.get(`/handymen?${params.toString()}`);
       return response.data;
     },
@@ -176,15 +179,15 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">City</label>
-            <Select 
-              value={cityId} 
+            <Select
+              value={cityId}
               onValueChange={(val) => setCityId(val || "all")}
               disabled={provinceId === "all"}
             >
               <SelectTrigger className="w-full rounded-xl border-border bg-white h-12">
                 <SelectValue>
-                  {provinceId === "all" 
-                    ? "Select Province first" 
+                  {provinceId === "all"
+                    ? "Select Province first"
                     : (cityId === "all" ? "All Cities" : cities.find(c => c.id.toString() === cityId)?.name)}
                 </SelectValue>
               </SelectTrigger>
@@ -204,17 +207,17 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
       <div>
         <h3 className="font-heading font-bold text-lg mb-4">Categories</h3>
         <div className="flex flex-col gap-2">
-          <Button 
-            variant={category === "all" ? "secondary" : "ghost"} 
+          <Button
+            variant={category === "all" ? "secondary" : "ghost"}
             className="justify-start rounded-xl font-medium"
             onClick={() => setCategory("all")}
           >
             All Categories
           </Button>
           {initialCategories.map((cat) => (
-            <Button 
+            <Button
               key={cat.id}
-              variant={category === cat.slug ? "secondary" : "ghost"} 
+              variant={category === cat.slug ? "secondary" : "ghost"}
               className="justify-start rounded-xl font-medium text-muted-foreground hover:text-primary"
               onClick={() => setCategory(cat.slug)}
             >
@@ -275,8 +278,8 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
         </Select>
       </div>
 
-      <Button 
-        variant="outline" 
+      <Button
+        variant="outline"
         className="w-full rounded-xl h-12 border-primary/20 text-primary hover:bg-primary/5"
         onClick={resetFilters}
       >
@@ -294,16 +297,16 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
             <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary tracking-tight mb-4">
               Explore Professionals
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-base">
               Find and compare top-rated handymen for your project. Meticulously vetted, consistently rated.
             </p>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-4">
             {/* Search Bar */}
             <div className="relative w-full md:w-80">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input 
+              <Input
                 placeholder="Search by name..."
                 className="pl-11 rounded-full border-border bg-white h-12 shadow-sm focus-visible:ring-primary/20"
                 value={search}
@@ -346,7 +349,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
               <div className="text-sm font-medium text-muted-foreground">
                 Showing <span className="text-primary font-bold">{handymen.length}</span> professionals
               </div>
-              
+
               <div className="flex items-center gap-3">
                 <span className="text-sm font-medium text-muted-foreground hidden sm:inline">Sort by:</span>
                 <Select value={`${sortBy}-${order}`} onValueChange={(val) => {
@@ -393,14 +396,14 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                 </Button>
               </div>
             )}
-            
+
             {/* Pagination Placeholder */}
             {meta && meta.last_page > 1 && (
               <div className="mt-16 flex justify-center">
                 {/* We can implement pagination components here later */}
                 <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="rounded-xl border-border"
                     disabled={meta.current_page === 1}
                   >
@@ -409,8 +412,8 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                   <div className="px-4 text-sm font-medium">
                     Page {meta.current_page} of {meta.last_page}
                   </div>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="rounded-xl border-border"
                     disabled={meta.current_page === meta.last_page}
                   >

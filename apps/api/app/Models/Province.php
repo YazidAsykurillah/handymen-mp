@@ -10,7 +10,9 @@ class Province extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code'];
+    public $incrementing = false;
+
+    protected $fillable = ['id', 'name'];
 
     public function cities(): HasMany
     {
