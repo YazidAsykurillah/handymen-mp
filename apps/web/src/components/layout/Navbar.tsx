@@ -29,7 +29,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8 flex-1">
           <Link href="/" className="flex items-center gap-2">
             <span className="font-heading font-bold text-2xl tracking-tight text-primary">
-              Handyman
+              Cari Tukang
             </span>
           </Link>
         </div>
@@ -54,9 +54,8 @@ export default function Navbar() {
             <Link
               href={pathname}
               locale="id"
-              className={`text-xs font-bold transition-colors ${
-                locale === "id" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`text-xs font-bold transition-colors ${locale === "id" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               ID
             </Link>
@@ -64,9 +63,8 @@ export default function Navbar() {
             <Link
               href={pathname}
               locale="en"
-              className={`text-xs font-bold transition-colors ${
-                locale === "en" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`text-xs font-bold transition-colors ${locale === "en" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               EN
             </Link>
