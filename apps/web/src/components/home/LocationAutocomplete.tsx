@@ -6,10 +6,14 @@ import { apiClient } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 interface Location {
+  type: 'city' | 'district';
+  id: string;
   province_id: number;
   city_id: number;
+  district_id: number | null;
   province_name: string;
   city_name: string;
+  district_name: string | null;
   display_name: string;
 }
 
@@ -110,12 +114,16 @@ export function LocationAutocomplete({ onSelect, placeholder, className }: Locat
           ) : results.length > 0 ? (
             results.map((loc) => (
               <button
-                key={`${loc.province_id}-${loc.city_id}`}
+                key={`${loc.province_id}-${loc.city_id}-${loc.district_id ?? 'd'}`}
                 onClick={() => handleSelect(loc)}
                 className="w-full text-left px-6 py-3 hover:bg-muted/50 transition-colors flex flex-col gap-0.5 border-b border-border/5 last:border-0"
               >
-                <span className="text-sm font-bold text-primary">{loc.city_name}</span>
-                <span className="text-xs text-muted-foreground">{loc.province_name}</span>
+                <span className="text-sm font-bold text-primary">
+                  {loc.type === 'district' ? loc.district_name : loc.city_name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {loc.province_name} {loc.type === 'district' ? `- ${loc.city_name}` : ''}
+                </span>
               </button>
             ))
           ) : (

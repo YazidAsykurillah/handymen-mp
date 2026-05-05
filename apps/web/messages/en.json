@@ -27,10 +27,11 @@
   },
   "home": {
     "hero": {
-      "title": "Expert Craftsmanship, Delivered to Your Door.",
+      "title": "Trusted and Professional Hanydmen Near You.",
       "subtitle": "Find professional service providers for repairs, renovations, and maintenance near you.",
-      "searchPlaceholder": "What service do you need?",
-      "locationPlaceholder": "Location or Zip Code",
+      "categoryPlaceholder": "What service do you need?",
+      "allCategories": "All Categories",
+      "locationPlaceholder": "Type your location",
       "ctaSearch": "Find a Handyman"
     }
   },
@@ -70,5 +71,18 @@
     "title": "My Account",
     "profile": "Edit Profile",
     "reviews": "My Reviews"
+  },
+  "categories": {
+    "electrical": "Electrical",
+    "plumbing": "Plumbing",
+    "construction": "Construction",
+    "painting": "Painting",
+    "ac-repair": "AC Repair",
+    "carpentry": "Carpentry",
+    "roofing": "Roofing",
+    "tiling": "Tiling",
+    "cleaning": "Cleaning",
+    "other": "Other",
+    "all": "All Services"
   }
 }

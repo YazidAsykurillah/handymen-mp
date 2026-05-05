@@ -38,6 +38,10 @@ class HandymanController extends ApiController
             $query->where('city_id', $request->city_id);
         }
 
+        if ($request->filled('district_id')) {
+            $query->where('district_id', $request->district_id);
+        }
+
         if ($request->boolean('is_verified')) {
             $query->where('is_verified', true);
         }

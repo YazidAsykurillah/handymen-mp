@@ -92,6 +92,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const [minRating, setMinRating] = useState<string>(searchParams.get("rating_min") || "all");
   const [provinceId, setProvinceId] = useState<string>(searchParams.get("province_id") || "all");
   const [cityId, setCityId] = useState<string>(searchParams.get("city_id") || "all");
+  const [districtId, setDistrictId] = useState<string>(searchParams.get("district_id") || "all");
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => setIsMounted(true), []);
@@ -118,6 +119,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
       if (minRating !== "all") params.append("rating_min", minRating);
       if (provinceId !== "all") params.append("province_id", provinceId);
       if (cityId !== "all") params.append("city_id", cityId);
+      if (districtId !== "all") params.append("district_id", districtId);
       params.append("per_page", "12");
 
       const response = await apiClient.get(`/handymen?${params.toString()}`);

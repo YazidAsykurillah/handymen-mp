@@ -1,4 +1,5 @@
 import { Star, MapPin, CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
@@ -29,6 +30,7 @@ interface HandymanCardProps {
 }
 
 export function HandymanCard({ handyman }: HandymanCardProps) {
+  const ct = useTranslations("categories");
   const profileSrc = handyman.photo_profile || "/images/placeholder-avatar.png";
 
   return (
@@ -60,14 +62,16 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
           <h4 className="font-heading font-bold text-xl text-primary mb-1 truncate group-hover:text-secondary transition-colors">
             {handyman.name}
           </h4>
-          <p className="text-muted-foreground text-[13px] flex items-start gap-1 mb-4 leading-tight">
-            <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-secondary" />
-            <span>{handyman.province?.name} - {handyman.city?.name}</span>
-          </p>
+          {handyman.province?.name && handyman.city?.name && (
+            <p className="text-muted-foreground text-[13px] flex items-start gap-1 mb-4 leading-tight">
+              <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-secondary" />
+              <span>{handyman.province.name} - {handyman.city.name}</span>
+            </p>
+          )}
           <div className="flex flex-wrap gap-2 mt-auto">
             {handyman.categories?.slice(0, 2).map((cat) => (
               <span key={cat.id} className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground bg-muted px-2 py-1 rounded">
-                {cat.name}
+                {ct(cat.slug)}
               </span>
             ))}
           </div>

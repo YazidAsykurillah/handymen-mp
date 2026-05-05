@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { HandymanCard } from "@/components/handyman/HandymanCard";
 import { LocationAutocomplete } from "@/components/home/LocationAutocomplete";
+import { CategoryCard } from "@/components/categories/CategoryCard";
 
 interface Category {
   id: number;
@@ -37,6 +38,7 @@ interface Handyman {
   is_verified: boolean;
   is_premium: boolean;
   city?: { name: string };
+  province?: { name: string };
   categories?: Category[];
 }
 
@@ -45,24 +47,16 @@ interface HomeViewProps {
   initialHandymen?: Handyman[];
 }
 
-const ICON_MAP: Record<string, any> = {
-  zap: Zap,
-  wrench: Wrench,
-  thermometer: ThermometerSnowflake,
-  paint: PaintRoller,
-  electricity: Zap,
-  plumbing: Wrench,
-  hvac: ThermometerSnowflake,
-  painting: PaintRoller,
-};
+
 
 export default function HomeView({ initialCategories, initialHandymen }: HomeViewProps) {
   const t = useTranslations("home.hero");
+  const ct = useTranslations("categories");
   const router = useRouter();
 
   // Search State
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedLocation, setSelectedLocation] = useState<{ province_id: number; city_id: number } | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{ province_id: number; city_id: number; district_id?: number | null } | null>(null);
 
   const { data: categories, isLoading: isCategoriesLoading } = useQuery<Category[]>({
     queryKey: ["categories"],
@@ -88,8 +82,11 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
     if (selectedLocation) {
       params.append("province_id", selectedLocation.province_id.toString());
       params.append("city_id", selectedLocation.city_id.toString());
+      if (selectedLocation.district_id) {
+        params.append("district_id", selectedLocation.district_id.toString());
+      }
     }
-    
+
     router.push(`/explore?${params.toString()}`);
   };
 
@@ -110,26 +107,30 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
             <Wrench className="w-5 h-5 text-muted-foreground shrink-0" />
             <Select value={selectedCategory} onValueChange={(val) => setSelectedCategory(val || "all")}>
               <SelectTrigger className="border-none shadow-none focus:ring-0 p-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto w-full flex justify-between">
-                <SelectValue placeholder={t("searchPlaceholder")} />
+                <SelectValue>
+                  {selectedCategory === "all" 
+                    ? t("categoryPlaceholder") 
+                    : ct(selectedCategory)}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Services</SelectItem>
+                <SelectItem value="all">{ct("all")}</SelectItem>
                 {categories?.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
+                  <SelectItem key={cat.id} value={cat.slug}>{ct(cat.slug)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="flex-1 w-full px-6 h-[64px]">
-            <LocationAutocomplete 
+            <LocationAutocomplete
               onSelect={setSelectedLocation}
               placeholder={t("locationPlaceholder")}
               className="h-full"
             />
           </div>
 
-          <Button 
+          <Button
             onClick={handleSearch}
             className="w-full md:w-auto rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-7 text-base font-semibold shadow-md shrink-0 flex items-center gap-2"
           >
@@ -150,17 +151,17 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categories?.map((c) => {
-                const Icon = ICON_MAP[c.icon || ""] || Zap;
-                return (
-                  <Card key={c.id} className="flex flex-col items-center justify-center p-10 rounded-[1.5rem] bg-white border border-border shadow-sm hover:shadow-md transition-all cursor-pointer group">
-                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <Icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <span className="font-heading font-semibold text-xl text-primary">{c.name}</span>
-                  </Card>
-                );
-              })}
+              {categories?.map((c) => (
+                <CategoryCard 
+                  key={c.id} 
+                  category={c} 
+                  onClick={() => {
+                    const params = new URLSearchParams();
+                    params.append("category", c.slug);
+                    router.push(`/explore?${params.toString()}`);
+                  }}
+                />
+              ))}
             </div>
           )}
         </div>

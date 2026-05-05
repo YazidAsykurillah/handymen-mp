@@ -29,8 +29,9 @@
     "hero": {
       "title": "Tukang Profesional & Terpercaya di Sekitar Anda.",
       "subtitle": "Cari penyedia jasa untuk perbaikan, renovasi, dan pemeliharaan yang profesional.",
-      "searchPlaceholder": "Layanan apa yang Anda butuhkan?",
-      "locationPlaceholder": "Lokasi",
+      "categoryPlaceholder": "Layanan apa yang Anda butuhkan?",
+      "allCategories": "Semua Layanan",
+      "locationPlaceholder": "Ketik Lokasi Anda",
       "ctaSearch": "Cari Tukang"
     }
   },
@@ -70,5 +71,18 @@
     "title": "Akun Saya",
     "profile": "Edit Profil",
     "reviews": "Ulasan Saya"
+  },
+  "categories": {
+    "electrical": "Kelistrikan",
+    "plumbing": "Perbaikan Saluran Air",
+    "construction": "Bangunan",
+    "painting": "Pengecatan",
+    "ac-repair": "Servis AC",
+    "carpentry": "Tukang Kayu",
+    "roofing": "Atap/Genteng",
+    "tiling": "Pemasangan Keramik",
+    "cleaning": "Pembersihan",
+    "other": "Lainnya",
+    "all": "Semua Layanan"
   }
 }
