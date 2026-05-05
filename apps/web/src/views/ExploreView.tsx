@@ -80,7 +80,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const h = useTranslations("handyman");
 
   const searchParams = useSearchParams();
-  
+
   // Filter States
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get("search") || "");
@@ -157,10 +157,10 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const FilterSidebar = () => (
     <div className="space-y-8">
       <div>
-        <h3 className="font-heading font-bold text-lg mb-4">Location</h3>
+        <h3 className="font-heading font-bold text-lg mb-4">{t("location")}</h3>
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Province</label>
+            <label className="text-sm font-medium text-muted-foreground">{t("province")}</label>
             <Select value={provinceId} onValueChange={(val) => {
               setProvinceId(val || "all");
               setCityId("all");
@@ -180,7 +180,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">City</label>
+            <label className="text-sm font-medium text-muted-foreground">{t("city")}</label>
             <Select
               value={cityId}
               onValueChange={(val) => setCityId(val || "all")}

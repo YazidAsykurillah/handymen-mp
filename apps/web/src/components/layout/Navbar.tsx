@@ -76,8 +76,14 @@ export default function Navbar() {
         {/* Actions Links */}
         <div className="flex items-center gap-3 sm:gap-6">
           <Link href="/auth/login">
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-6 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
               {t("signIn")}
+            </Button>
+          </Link>
+
+          <Link href="/auth/register">
+            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
+              {t("register")}
             </Button>
           </Link>
 
@@ -107,6 +113,19 @@ export default function Navbar() {
                     {link.label}
                   </Link>
                 ))}
+                <hr className="border-border my-2" />
+                <Link
+                  href="/auth/login"
+                  className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {t("signIn")}
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="text-xl font-heading font-semibold text-secondary hover:text-secondary/80 transition-colors"
+                >
+                  {t("register")}
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>

@@ -13,7 +13,11 @@
     "cancel": "Batal",
     "delete": "Hapus",
     "edit": "Edit",
-    "logout": "Keluar"
+    "logout": "Keluar",
+    "location": "Lokasi",
+    "province": "Provinsi",
+    "city": "Kota/Kabupaten",
+    "district": "Kecamatan"
   },
   "nav": {
     "findHandyman": "Cari Tukang",
@@ -28,8 +32,8 @@
   "home": {
     "hero": {
       "title": "Tukang Profesional & Terpercaya di Sekitar Anda.",
-      "subtitle": "Cari penyedia jasa untuk perbaikan, renovasi, dan pemeliharaan yang profesional.",
-      "categoryPlaceholder": "Layanan apa yang Anda butuhkan?",
+      "subtitle": "Cari tukang profesional untuk perbaikan, renovasi, dan pekerjaan rumah lainnya.",
+      "categoryPlaceholder": "Plih kategori layanan",
       "allCategories": "Semua Layanan",
       "locationPlaceholder": "Ketik Lokasi Anda",
       "ctaSearch": "Cari Tukang"

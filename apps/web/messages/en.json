@@ -13,7 +13,11 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "logout": "Logout"
+    "logout": "Logout",
+    "location": "Location",
+    "province": "Province",
+    "city": "City",
+    "district": "District"
   },
   "nav": {
     "findHandyman": "Find Handyman",
