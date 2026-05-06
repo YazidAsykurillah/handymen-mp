@@ -17,9 +17,10 @@ import { Wrench, MapPin, Zap, ThermometerSnowflake, PaintRoller, Search, Loader2
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
-import { HandymanCard } from "@/components/handyman/HandymanCard";
+import { HandymanCard } from "@/components/handymen/HandymanCard";
 import { LocationAutocomplete } from "@/components/home/LocationAutocomplete";
 import { CategoryCard } from "@/components/categories/CategoryCard";
+import { TopRatedHandymen } from "@/components/handymen/TopRatedHandymen";
 
 interface Category {
   id: number;
@@ -51,7 +52,6 @@ interface HomeViewProps {
 
 export default function HomeView({ initialCategories, initialHandymen }: HomeViewProps) {
   const t = useTranslations("home.hero");
-  const tr = useTranslations("home.topRatedSection");
   const ct = useTranslations("categories");
   const router = useRouter();
 
@@ -66,16 +66,6 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
       return response.data.data as Category[];
     },
     initialData: initialCategories,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-
-  const { data: handymen, isLoading: isHandymenLoading } = useQuery<Handyman[]>({
-    queryKey: ["handymen", 12, "top-rated"],
-    queryFn: async () => {
-      const response = await apiClient.get("/handymen?per_page=12&rating_min=4&sort=rating_avg&order=desc");
-      return response.data.data as Handyman[];
-    },
-    initialData: initialHandymen,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
@@ -117,7 +107,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{ct("all")}</SelectItem>
+                <SelectItem value="all">{t("allCategories")}</SelectItem>
                 {categories?.map((cat) => (
                   <SelectItem key={cat.id} value={cat.slug}>{ct(cat.slug)}</SelectItem>
                 ))}
@@ -170,35 +160,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
         </div>
       </section>
 
-      {/* Top Rated Handymen */}
-      <section className="py-20 px-6 md:px-16 bg-muted/30">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-            <div className="max-w-2xl">
-              <h2 className="text-4xl font-heading font-bold text-primary mb-4">{tr("title")}</h2>
-              <p className="text-muted-foreground text-base">
-                {tr("subtitle")}
-              </p>
-            </div>
-            <Button variant="outline" className="rounded-full px-8 py-6 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold transition-all">
-              {tr("ctaViewAll")}
-            </Button>
-          </div>
-
-
-          {isHandymenLoading && !handymen ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {handymen?.map((h) => (
-                <HandymanCard key={h.id} handyman={h} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+      <TopRatedHandymen initialHandymen={initialHandymen} />
 
       {/* Featured Project */}
       <section className="pb-20 px-6 md:px-16 pt-10">

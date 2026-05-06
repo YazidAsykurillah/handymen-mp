@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -16,7 +17,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { apiClient } from "@/lib/api";
-import { HandymanCard } from "@/components/handyman/HandymanCard";
+import { HandymanCard } from "@/components/handymen/HandymanCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -80,6 +81,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const h = useTranslations("handyman");
 
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   // Filter States
   const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -97,6 +99,44 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => setIsMounted(true), []);
 
+  // Sync state with URL params (e.g. when navigating back or from home)
+  useEffect(() => {
+    if (!isMounted) return;
+    
+    const s = searchParams.get("search");
+    if (s !== null) {
+      setSearch(s);
+      setDebouncedSearch(s);
+    }
+    
+    const cat = searchParams.get("category");
+    if (cat !== null) setCategory(cat);
+    
+    const sort = searchParams.get("sort");
+    if (sort !== null) setSortBy(sort);
+    
+    const ord = searchParams.get("order");
+    if (ord !== null) setOrder(ord);
+
+    const v = searchParams.get("is_verified");
+    if (v !== null) setIsVerified(v);
+
+    const p = searchParams.get("is_premium");
+    if (p !== null) setIsPremium(p);
+
+    const r = searchParams.get("rating_min");
+    if (r !== null) setMinRating(r);
+
+    const prov = searchParams.get("province_id");
+    if (prov !== null) setProvinceId(prov);
+
+    const city = searchParams.get("city_id");
+    if (city !== null) setCityId(city);
+
+    const dist = searchParams.get("district_id");
+    if (dist !== null) setDistrictId(dist);
+  }, [searchParams, isMounted]);
+
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -104,6 +144,28 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     }, 500);
     return () => clearTimeout(timer);
   }, [search]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.append("search", debouncedSearch);
+    if (category !== "all") params.append("category", category);
+    if (sortBy) params.append("sort", sortBy);
+    if (order) params.append("order", order);
+    if (isVerified !== "all") params.append("is_verified", isVerified);
+    if (isPremium !== "all") params.append("is_premium", isPremium);
+    if (minRating !== "all") params.append("rating_min", minRating);
+    if (provinceId !== "all") params.append("province_id", provinceId);
+    if (cityId !== "all") params.append("city_id", cityId);
+    if (districtId !== "all") params.append("district_id", districtId);
+
+    const queryString = params.toString();
+    const url = queryString ? `/explore?${queryString}` : "/explore";
+
+    router.replace(url, { scroll: false });
+  }, [debouncedSearch, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, isMounted, router]);
 
   // Query for Handymen
   const { data: handymenData, isLoading, isFetching } = useQuery({
@@ -354,14 +416,26 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
               <div className="flex items-center gap-3">
                 <span className="text-sm font-medium text-muted-foreground hidden sm:inline">Sort by:</span>
-                <Select value={`${sortBy}-${order}`} onValueChange={(val) => {
-                  if (!val) return;
-                  const [s, o] = val.split("-");
-                  setSortBy(s);
-                  setOrder(o);
-                }}>
+                <Select
+                  value={`${sortBy}-${order}`}
+                  onValueChange={(val) => {
+                    if (!val) return;
+                    const [s, o] = val.split("-");
+                    setSortBy(s);
+                    setOrder(o);
+                  }}
+                >
                   <SelectTrigger className="w-48 rounded-xl border-border bg-white h-10 text-sm">
-                    <SelectValue />
+                    <SelectValue>
+                      {({ value }) => {
+                        const options: Record<string, string> = {
+                          "created_at-desc": "Newest First",
+                          "rating_avg-desc": "Highest Rated",
+                          "review_count-desc": "Most Reviews",
+                        };
+                        return options[value as string] || "Newest First";
+                      }}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="created_at-desc">Newest First</SelectItem>
