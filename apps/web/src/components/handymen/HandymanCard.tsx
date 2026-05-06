@@ -59,7 +59,7 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
               <CheckCircle2 className="w-4 h-4 text-blue-500" />
             )}
           </div>
-          <h4 className="font-heading font-bold text-xl text-primary mb-1 truncate group-hover:text-secondary transition-colors">
+          <h4 className="font-heading font-bold text-xl text-primary mb-2 truncate">
             {handyman.name}
           </h4>
           {handyman.province?.name && handyman.city?.name && (
@@ -69,11 +69,16 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
             </p>
           )}
           <div className="flex flex-wrap gap-2 mt-auto">
-            {handyman.categories?.slice(0, 2).map((cat) => (
+            {handyman.categories?.slice(0, 3).map((cat) => (
               <span key={cat.id} className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground bg-muted px-2 py-1 rounded">
                 {ct(cat.slug)}
               </span>
             ))}
+            {handyman.categories && handyman.categories.length > 3 && (
+              <span className="text-[10px] font-bold text-muted-foreground bg-muted/50 px-2 py-1 rounded">
+                +{handyman.categories.length - 3}
+              </span>
+            )}
           </div>
         </div>
       </Card>

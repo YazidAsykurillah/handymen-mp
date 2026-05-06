@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
@@ -79,6 +79,8 @@ interface ExploreViewProps {
 export default function ExploreView({ initialCategories, initialHandymen, initialProvinces }: ExploreViewProps) {
   const t = useTranslations("common");
   const h = useTranslations("handyman");
+  const ct = useTranslations("categories");
+  const et = useTranslations("explore");
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -97,45 +99,51 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const [districtId, setDistrictId] = useState<string>(searchParams.get("district_id") || "all");
 
   const [isMounted, setIsMounted] = useState(false);
+  const lastUrlParamsRef = useRef(searchParams.toString());
   useEffect(() => setIsMounted(true), []);
 
   // Sync state with URL params (e.g. when navigating back or from home)
   useEffect(() => {
     if (!isMounted) return;
-    
-    const s = searchParams.get("search");
-    if (s !== null) {
+
+    const currentParams = searchParams.toString();
+    if (currentParams === lastUrlParamsRef.current) return;
+
+    lastUrlParamsRef.current = currentParams;
+
+    const s = searchParams.get("search") || "";
+    if (s !== search) {
       setSearch(s);
       setDebouncedSearch(s);
     }
-    
-    const cat = searchParams.get("category");
-    if (cat !== null) setCategory(cat);
-    
-    const sort = searchParams.get("sort");
-    if (sort !== null) setSortBy(sort);
-    
-    const ord = searchParams.get("order");
-    if (ord !== null) setOrder(ord);
 
-    const v = searchParams.get("is_verified");
-    if (v !== null) setIsVerified(v);
+    const cat = searchParams.get("category") || "all";
+    if (cat !== category) setCategory(cat);
 
-    const p = searchParams.get("is_premium");
-    if (p !== null) setIsPremium(p);
+    const sort = searchParams.get("sort") || "created_at";
+    if (sort !== sortBy) setSortBy(sort);
 
-    const r = searchParams.get("rating_min");
-    if (r !== null) setMinRating(r);
+    const ord = searchParams.get("order") || "desc";
+    if (ord !== order) setOrder(ord);
 
-    const prov = searchParams.get("province_id");
-    if (prov !== null) setProvinceId(prov);
+    const v = searchParams.get("is_verified") || "all";
+    if (v !== isVerified) setIsVerified(v);
 
-    const city = searchParams.get("city_id");
-    if (city !== null) setCityId(city);
+    const p = searchParams.get("is_premium") || "all";
+    if (p !== isPremium) setIsPremium(p);
 
-    const dist = searchParams.get("district_id");
-    if (dist !== null) setDistrictId(dist);
-  }, [searchParams, isMounted]);
+    const r = searchParams.get("rating_min") || "all";
+    if (r !== minRating) setMinRating(r);
+
+    const prov = searchParams.get("province_id") || "all";
+    if (prov !== provinceId) setProvinceId(prov);
+
+    const city = searchParams.get("city_id") || "all";
+    if (city !== cityId) setCityId(city);
+
+    const dist = searchParams.get("district_id") || "all";
+    if (dist !== districtId) setDistrictId(dist);
+  }, [searchParams, isMounted, search, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId]);
 
   // Debounce search input
   useEffect(() => {
@@ -162,6 +170,9 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     if (districtId !== "all") params.append("district_id", districtId);
 
     const queryString = params.toString();
+    if (queryString === lastUrlParamsRef.current) return;
+
+    lastUrlParamsRef.current = queryString;
     const url = queryString ? `/explore?${queryString}` : "/explore";
 
     router.replace(url, { scroll: false });
@@ -269,14 +280,14 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
       <Separator />
 
       <div>
-        <h3 className="font-heading font-bold text-lg mb-4">Categories</h3>
+        <h3 className="font-heading font-bold text-lg mb-4">{t("handyman_category")}</h3>
         <div className="flex flex-col gap-2">
           <Button
             variant={category === "all" ? "secondary" : "ghost"}
             className="justify-start rounded-xl font-medium"
             onClick={() => setCategory("all")}
           >
-            All Categories
+            {ct("all")}
           </Button>
           {initialCategories.map((cat) => (
             <Button
@@ -285,7 +296,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
               className="justify-start rounded-xl font-medium text-muted-foreground hover:text-primary"
               onClick={() => setCategory(cat.slug)}
             >
-              {cat.name}
+              {ct(cat.slug)}
             </Button>
           ))}
         </div>
@@ -359,10 +370,10 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-heading font-bold text-primary tracking-tight mb-4">
-              Explore Professionals
+              {et("search_title")}
             </h1>
             <p className="text-muted-foreground text-base">
-              Find and compare top-rated handymen for your project. Meticulously vetted, consistently rated.
+              {et("search_subtitle")}
             </p>
           </div>
 
@@ -411,11 +422,11 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
             {/* Sorting Controls */}
             <div className="flex items-center justify-between mb-8">
               <div className="text-sm font-medium text-muted-foreground">
-                Showing <span className="text-primary font-bold">{handymen.length}</span> professionals
+                {et("showing")} <span className="text-primary font-bold">{handymen.length}</span> {et("handyman_word")}
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-muted-foreground hidden sm:inline">Sort by:</span>
+                <span className="text-sm font-medium text-muted-foreground hidden sm:inline">{et("sortBy")}:</span>
                 <Select
                   value={`${sortBy}-${order}`}
                   onValueChange={(val) => {
@@ -427,20 +438,20 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                 >
                   <SelectTrigger className="w-48 rounded-xl border-border bg-white h-10 text-sm">
                     <SelectValue>
-                      {({ value }) => {
+                      {(() => {
                         const options: Record<string, string> = {
-                          "created_at-desc": "Newest First",
-                          "rating_avg-desc": "Highest Rated",
-                          "review_count-desc": "Most Reviews",
+                          "created_at-desc": et("sortByNewest"),
+                          "rating_avg-desc": et("sortByHighestRating"),
+                          "review_count-desc": et("sortByMostReviews"),
                         };
-                        return options[value as string] || "Newest First";
-                      }}
+                        return options[`${sortBy}-${order}`] || et("sortByNewest");
+                      })()}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="created_at-desc">Newest First</SelectItem>
-                    <SelectItem value="rating_avg-desc">Highest Rated</SelectItem>
-                    <SelectItem value="review_count-desc">Most Reviews</SelectItem>
+                    <SelectItem value="created_at-desc">{et("sortByNewest")}</SelectItem>
+                    <SelectItem value="rating_avg-desc">{et("sortByHighestRating")}</SelectItem>
+                    <SelectItem value="review_count-desc">{et("sortByMostReviews")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

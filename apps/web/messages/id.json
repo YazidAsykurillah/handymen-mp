@@ -17,7 +17,9 @@
     "location": "Lokasi",
     "province": "Provinsi",
     "city": "Kota/Kabupaten",
-    "district": "Kecamatan"
+    "district": "Kecamatan",
+    "handyman_word": "Tukang",
+    "handyman_category": "Kategori Tukang"
   },
   "nav": {
     "findHandyman": "Cari Tukang",
@@ -44,8 +46,22 @@
       "ctaViewAll": "Tampilkan Semua"
     }
   },
+  "explore": {
+    "search_title": "Pencarian Tukang",
+    "search_subtitle": "Temukan tukang profesional dan terpercaya untuk konstruksi, renovasi, dan pekerjaan lainnya.",
+    "all_categories": "Semua Kategori",
+    "showing": "Menampilkan",
+    "handyman_word": "Tukang",
+    "sortBy": "Urutkan",
+    "sortByNewest": "Terbaru",
+    "sortByMostReviews": "Ulasan Terbanyak",
+    "sortByHighestRating": "Rating Tertinggi",
+    "verified": "Terverifikasi",
+    "premium": "Premium",
+    "min_rating": "Rating Minimal"
+  },
   "handyman": {
-    "categories": "Kategori Layanan",
+    "categories": "Kategori Tukang",
     "location": "Lokasi",
     "portfolio": "Portofolio",
     "contactViaWhatsapp": "Hubungi via WhatsApp",
@@ -92,6 +108,6 @@
     "tiling": "Tukang Keramik",
     "cleaning": "Tukang Jasa Kebersihan",
     "other": "Lainnya",
-    "all": "Semua Kategori"
+    "all": "Semua"
   }
 }

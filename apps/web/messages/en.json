@@ -17,7 +17,8 @@
     "location": "Location",
     "province": "Province",
     "city": "City",
-    "district": "District"
+    "district": "District",
+    "handyman_category": "Handyman Categories"
   },
   "nav": {
     "findHandyman": "Find Handyman",
@@ -44,8 +45,22 @@
       "ctaViewAll": "Show All"
     }
   },
+  "explore": {
+    "search_title": "Handyman Search",
+    "search_subtitle": "Find professional and trusted handymen for construction, renovation, and other works.",
+    "all_categories": "All Categories",
+    "showing": "Showing",
+    "handyman_word": "Handymen",
+    "sortBy": "Sort By",
+    "sortByNewest": "Newest First",
+    "sortByMostReviews": "Most Reviews",
+    "sortByHighestRating": "Highest Rated",
+    "verified": "Verified",
+    "premium": "Premium",
+    "min_rating": "Minimum Rating"
+  },
   "handyman": {
-    "categories": "Service Categories",
+    "categories": "Handyman Categories",
     "location": "Location",
     "portfolio": "Portfolio",
     "contactViaWhatsApp": "Contact via WhatsApp",
@@ -92,6 +107,6 @@
     "tiling": "Tiling",
     "cleaning": "Cleaning",
     "other": "Other",
-    "all": "All Services"
+    "all": "All"
   }
 }
