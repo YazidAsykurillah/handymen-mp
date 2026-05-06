@@ -18,7 +18,9 @@ class ReferenceDataController extends ApiController
      */
     public function categories()
     {
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::where('is_active', true)
+            ->withCount('handymen')
+            ->get();
         return CategoryResource::collection($categories);
     }
 

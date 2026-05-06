@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ interface Category {
   name: string;
   slug: string;
   icon?: string;
+  handymen_count?: number;
 }
 
 interface Handyman {
@@ -68,6 +69,12 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
     initialData: initialCategories,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  // Determine the most popular category
+  const maxHandymenCount = useMemo(() => {
+    if (!categories || categories.length === 0) return 0;
+    return Math.max(...categories.map(c => c.handymen_count || 0));
+  }, [categories]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -147,7 +154,10 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
               {categories?.map((c) => (
                 <CategoryCard
                   key={c.id}
-                  category={c}
+                  category={{
+                    ...c,
+                    isPopular: (c.handymen_count || 0) > 0 && c.handymen_count === maxHandymenCount
+                  }}
                   onClick={() => {
                     const params = new URLSearchParams();
                     params.append("category", c.slug);
