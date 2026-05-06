@@ -398,9 +398,9 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                     Filters
                   </Button>
                 } />
-                <SheetContent side="left" className="w-[300px] overflow-y-auto pt-10">
-                  <SheetHeader className="mb-8">
-                    <SheetTitle className="text-2xl font-heading">Filters</SheetTitle>
+                <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto px-8 pt-10 pb-10">
+                  <SheetHeader className="mb-8 text-left">
+                    <SheetTitle className="text-2xl font-heading">{t("filter")}</SheetTitle>
                   </SheetHeader>
                   <FilterSidebar />
                 </SheetContent>
