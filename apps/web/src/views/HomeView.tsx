@@ -51,6 +51,7 @@ interface HomeViewProps {
 
 export default function HomeView({ initialCategories, initialHandymen }: HomeViewProps) {
   const t = useTranslations("home.hero");
+  const tr = useTranslations("home.topRatedSection");
   const ct = useTranslations("categories");
   const router = useRouter();
 
@@ -110,8 +111,8 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
             <Select value={selectedCategory} onValueChange={(val) => setSelectedCategory(val || "all")}>
               <SelectTrigger className="border-none shadow-none focus:ring-0 p-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto w-full flex justify-between">
                 <SelectValue>
-                  {selectedCategory === "all" 
-                    ? t("categoryPlaceholder") 
+                  {selectedCategory === "all"
+                    ? t("categoryPlaceholder")
                     : ct(selectedCategory)}
                 </SelectValue>
               </SelectTrigger>
@@ -145,7 +146,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
       {/* All Categories */}
       <section className="py-16 px-6 md:px-16">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-heading font-bold text-center text-primary mb-12">All Categories</h2>
+          <h2 className="text-4xl font-heading font-bold text-center text-primary mb-12">{t("allCategories")}</h2>
 
           {(isCategoriesLoading && !categories) ? (
             <div className="flex justify-center py-12">
@@ -154,9 +155,9 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {categories?.map((c) => (
-                <CategoryCard 
-                  key={c.id} 
-                  category={c} 
+                <CategoryCard
+                  key={c.id}
+                  category={c}
                   onClick={() => {
                     const params = new URLSearchParams();
                     params.append("category", c.slug);
@@ -174,13 +175,13 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
             <div className="max-w-2xl">
-              <h2 className="text-4xl font-heading font-bold text-primary mb-4">Top Rated Handymen</h2>
+              <h2 className="text-4xl font-heading font-bold text-primary mb-4">{tr("title")}</h2>
               <p className="text-muted-foreground text-base">
-                Discover the elite of our marketplace. Verified professionals with consistent 5-star delivery.
+                {tr("subtitle")}
               </p>
             </div>
             <Button variant="outline" className="rounded-full px-8 py-6 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold transition-all">
-              View All Professionals
+              {tr("ctaViewAll")}
             </Button>
           </div>
 

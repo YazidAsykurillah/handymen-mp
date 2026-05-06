@@ -32,11 +32,16 @@
   "home": {
     "hero": {
       "title": "Tukang Profesional & Terpercaya di Sekitar Anda.",
-      "subtitle": "Cari tukang profesional untuk perbaikan, renovasi, dan pekerjaan rumah lainnya.",
-      "categoryPlaceholder": "Plih kategori layanan",
-      "allCategories": "Semua Layanan",
+      "subtitle": "Temukan tukang profesional untuk pembangunan, renovasi, dan pekerjaan lainnya.",
+      "categoryPlaceholder": "Plih Kategori Tukang",
+      "allCategories": "Semua Kategori Tukang",
       "locationPlaceholder": "Ketik Lokasi Anda",
       "ctaSearch": "Cari Tukang"
+    },
+    "topRatedSection": {
+      "title": "Tukang Pilihan",
+      "subtitle": "Tukang profesional dengan rating tertinggi.",
+      "ctaViewAll": "Tampilkan Semua"
     }
   },
   "handyman": {
@@ -77,16 +82,16 @@
     "reviews": "Ulasan Saya"
   },
   "categories": {
-    "electrical": "Kelistrikan",
-    "plumbing": "Perbaikan Saluran Air",
-    "construction": "Bangunan",
-    "painting": "Pengecatan",
-    "ac-repair": "Servis AC",
+    "electrical": "Tukang Listrik",
+    "plumbing": "Tukang Ledeng",
+    "construction": "Tukang Bangunan",
+    "painting": "Tukang Cat",
+    "ac-repair": "Tukang Servis AC",
     "carpentry": "Tukang Kayu",
-    "roofing": "Atap/Genteng",
-    "tiling": "Pemasangan Keramik",
-    "cleaning": "Pembersihan",
+    "roofing": "Tukang Atap",
+    "tiling": "Tukang Keramik",
+    "cleaning": "Tukang Jasa Kebersihan",
     "other": "Lainnya",
-    "all": "Semua Layanan"
+    "all": "Semua Kategori"
   }
 }

@@ -37,6 +37,11 @@
       "allCategories": "All Categories",
       "locationPlaceholder": "Type your location",
       "ctaSearch": "Find a Handyman"
+    },
+    "topRatedSection": {
+      "title": "Top Rated Handymen",
+      "subtitle": "Discover the elite of our marketplace. Verified professionals with consistent 5-star delivery.",
+      "ctaViewAll": "Show All"
     }
   },
   "handyman": {

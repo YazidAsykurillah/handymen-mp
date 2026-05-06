@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Globe, Menu } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -16,11 +17,16 @@ export default function Navbar() {
   const locale = useLocale();
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
   const navLinks = [
     { href: "/explore", label: t("explore") },
     { href: "/projects", label: t("projects") },
   ];
+
+  const handleLinkClick = () => {
+    setOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -29,7 +35,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8 flex-1">
           <Link href="/" className="flex items-center gap-2">
             <span className="font-heading font-bold text-2xl tracking-tight text-primary">
-              Cari Tukang
+              Handyman
             </span>
           </Link>
         </div>
@@ -54,8 +60,9 @@ export default function Navbar() {
             <Link
               href={pathname}
               locale="id"
-              className={`text-xs font-bold transition-colors ${locale === "id" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
-                }`}
+              className={`text-xs font-bold transition-colors ${
+                locale === "id" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
+              }`}
             >
               ID
             </Link>
@@ -63,8 +70,9 @@ export default function Navbar() {
             <Link
               href={pathname}
               locale="en"
-              className={`text-xs font-bold transition-colors ${locale === "en" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
-                }`}
+              className={`text-xs font-bold transition-colors ${
+                locale === "en" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
+              }`}
             >
               EN
             </Link>
@@ -73,20 +81,20 @@ export default function Navbar() {
 
         {/* Actions Links */}
         <div className="flex items-center gap-3 sm:gap-6">
-          <Link href="/auth/login">
+          <Link href="/auth/login" className="hidden xs:block">
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
               {t("signIn")}
             </Button>
           </Link>
 
-          <Link href="/auth/register">
+          <Link href="/auth/register" className="hidden xs:block">
             <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
               {t("register")}
             </Button>
           </Link>
 
           {/* Mobile Menu Trigger moved to the right */}
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               render={
                 <Button variant="ghost" size="icon" className="lg:hidden rounded-full">
@@ -98,7 +106,7 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetHeader className="text-left">
                 <SheetTitle className="font-heading font-bold text-2xl text-primary">
-                  Handyman
+                  <Link href="/" onClick={handleLinkClick}>Handyman</Link>
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-6 mt-12 px-6">
@@ -106,6 +114,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={handleLinkClick}
                     className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
@@ -114,12 +123,14 @@ export default function Navbar() {
                 <hr className="border-border my-2" />
                 <Link
                   href="/auth/login"
+                  onClick={handleLinkClick}
                   className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
                 >
                   {t("signIn")}
                 </Link>
                 <Link
                   href="/auth/register"
+                  onClick={handleLinkClick}
                   className="text-xl font-heading font-semibold text-secondary hover:text-secondary/80 transition-colors"
                 >
                   {t("register")}
