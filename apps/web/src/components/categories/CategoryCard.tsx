@@ -1,19 +1,35 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Zap, Wrench, ThermometerSnowflake, PaintRoller, LucideIcon } from "lucide-react";
+import { 
+  Zap, 
+  Wrench, 
+  ThermometerSnowflake, 
+  PaintRoller, 
+  Hammer, 
+  Droplets, 
+  HardHat, 
+  Wind, 
+  Axe, 
+  Home, 
+  Grid, 
+  Sparkles,
+  LucideIcon 
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 const ICON_MAP: Record<string, LucideIcon> = {
-  zap: Zap,
-  wrench: Wrench,
-  thermometer: ThermometerSnowflake,
-  paint: PaintRoller,
-  electricity: Zap,
-  plumbing: Wrench,
-  hvac: ThermometerSnowflake,
-  painting: PaintRoller,
+  "electrical": Zap,
+  "plumbing": Droplets,
+  "construction": HardHat,
+  "painting": PaintRoller,
+  "ac-repair": ThermometerSnowflake,
+  "carpentry": Hammer,
+  "roofing": Home,
+  "tiling": Grid,
+  "cleaning": Sparkles,
+  "other": Wrench,
 };
 
 interface Category {
@@ -31,7 +47,7 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category, onClick, className }: CategoryCardProps) {
   const ct = useTranslations("categories");
-  const Icon = ICON_MAP[category.icon || ""] || Zap;
+  const Icon = ICON_MAP[category.slug] || Wrench;
 
   return (
     <Card 
