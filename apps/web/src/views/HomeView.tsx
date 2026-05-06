@@ -104,8 +104,8 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
         </p>
 
         {/* Search Bar */}
-        <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-border p-2 flex flex-col md:flex-row items-center relative z-20">
-          <div className="flex-1 flex items-center gap-3 px-6 w-full border-b md:border-b-0 md:border-r border-border py-3 md:py-0 h-[64px]">
+        <div className="w-full max-w-4xl bg-white rounded-[2.5rem] md:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-border p-2 flex flex-col md:flex-row items-stretch md:items-center relative z-20 gap-1 md:gap-0">
+          <div className="flex-1 flex items-center gap-3 px-6 w-full border-b md:border-b-0 md:border-r border-border py-4 md:py-0 md:h-[72px]">
             <Wrench className="w-5 h-5 text-muted-foreground shrink-0" />
             <Select value={selectedCategory} onValueChange={(val) => setSelectedCategory(val || "all")}>
               <SelectTrigger className="border-none shadow-none focus:ring-0 p-0 bg-transparent text-foreground placeholder:text-muted-foreground text-base h-auto w-full flex justify-between">
@@ -124,7 +124,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
             </Select>
           </div>
 
-          <div className="flex-1 w-full px-6 h-[64px]">
+          <div className="flex-1 w-full px-6 py-4 md:py-0 md:h-[72px] flex items-center">
             <LocationAutocomplete
               onSelect={setSelectedLocation}
               placeholder={t("locationPlaceholder")}
@@ -134,7 +134,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
 
           <Button
             onClick={handleSearch}
-            className="w-full md:w-auto rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-7 text-base font-semibold shadow-md shrink-0 flex items-center gap-2"
+            className="w-full md:w-auto rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 md:py-8 text-base font-semibold shadow-md shrink-0 flex items-center justify-center gap-2 md:ml-2"
           >
             <Search className="w-4 h-4" />
             {t("ctaSearch")}
