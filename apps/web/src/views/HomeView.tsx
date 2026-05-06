@@ -65,6 +65,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
       return response.data.data as Category[];
     },
     initialData: initialCategories,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const { data: handymen, isLoading: isHandymenLoading } = useQuery<Handyman[]>({
@@ -74,6 +75,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
       return response.data.data as Handyman[];
     },
     initialData: initialHandymen,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const handleSearch = () => {

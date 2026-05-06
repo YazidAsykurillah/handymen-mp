@@ -3,7 +3,6 @@ import { useAuthStore } from "@/store/auth.store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const INTERNAL_API_URL = API_URL;
-
 export const apiClient = axios.create({
   baseURL: typeof window === "undefined" ? INTERNAL_API_URL : API_URL,
   headers: {

@@ -26,8 +26,10 @@ services:
       - ./apps/api:/var/www
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
-      - handyman-network
-      - web-gateway
+      handyman-network:
+        aliases:
+          - api.handyman.local
+      web-gateway:
     depends_on:
       - app
 
