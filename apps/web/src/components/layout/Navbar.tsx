@@ -81,13 +81,13 @@ export default function Navbar() {
 
         {/* Actions Links */}
         <div className="flex items-center gap-3 sm:gap-6">
-          <Link href="/auth/login" className="hidden xs:block">
+          <Link href="/auth/login" className="hidden sm:block">
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
               {t("signIn")}
             </Button>
           </Link>
 
-          <Link href="/auth/register" className="hidden xs:block">
+          <Link href="/auth/register" className="hidden sm:block">
             <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
               {t("register")}
             </Button>
