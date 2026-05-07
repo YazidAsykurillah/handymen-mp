@@ -74,18 +74,18 @@ export default function HandymanDetailView({ initialData, slug }: HandymanDetail
   const ct = useTranslations("categories");
   const [reviewPage, setReviewPage] = useState(1);
 
-  // Fetch handyman profile (with SSR initial data)
+  // Fetch handyman profile (only if SSR didn't provide data)
   const { data: handymanData } = useQuery({
     queryKey: ["handyman", slug],
     queryFn: async () => {
       const response = await apiClient.get(`/handymen/${slug}`);
       return response.data.data as Handyman;
     },
-    initialData: initialData || undefined,
+    enabled: !initialData,
     staleTime: 1000 * 60 * 5,
   });
 
-  const handyman = handymanData || initialData;
+  const handyman = initialData || handymanData;
 
   // Fetch reviews
   const { data: reviewsData, isLoading: isReviewsLoading } = useQuery({
