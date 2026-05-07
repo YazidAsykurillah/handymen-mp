@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -7,14 +8,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
           {/* Column 1: Brand & Description */}
           <div className="space-y-4 md:col-span-1">
-            <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-wider">
-              Handyman
-            </h3>
+            <Link href="/" className="flex items-center gap-0 mb-2">
+              <Image src="/images/logo-transparent.png" alt="Handyman Logo" width={32} height={32} className="object-contain" />
+              <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-wider mb-0">
+                {process.env.NEXT_PUBLIC_APP_NAME || "Handyman"}
+              </h3>
+            </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Premium marketplace connecting discerning clients with elite craftsmen.
             </p>
             <p className="text-xs text-muted-foreground/70 pt-4">
-              &copy; {new Date().getFullYear()} Handyman Premium Marketplace. All rights reserved.
+              &copy; {new Date().getFullYear()} {process.env.NEXT_PUBLIC_APP_NAME || "Handyman"} Premium Marketplace. All rights reserved.
             </p>
           </div>
 

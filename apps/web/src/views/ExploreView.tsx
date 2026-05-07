@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import { slugify, getIdFromSlug, getSlugFromId } from "@/lib/slug";
 import {
   Search,
   Filter,
@@ -85,6 +86,8 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const searchParams = useSearchParams();
   const router = useRouter();
 
+
+
   // Filter States
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get("search") || "");
@@ -94,9 +97,27 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const [isVerified, setIsVerified] = useState<string>(searchParams.get("is_verified") || "all");
   const [isPremium, setIsPremium] = useState<string>(searchParams.get("is_premium") || "all");
   const [minRating, setMinRating] = useState<string>(searchParams.get("rating_min") || "all");
-  const [provinceId, setProvinceId] = useState<string>(searchParams.get("province_id") || "all");
+  
+  // Initialize provinceId from province slug in URL
+  const initialProvinceId = searchParams.get("province") 
+    ? getIdFromSlug(initialProvinces, searchParams.get("province"))
+    : (searchParams.get("province_id") || "all");
+
+  const [provinceId, setProvinceId] = useState<string>(initialProvinceId);
   const [cityId, setCityId] = useState<string>(searchParams.get("city_id") || "all");
   const [districtId, setDistrictId] = useState<string>(searchParams.get("district_id") || "all");
+
+  // Query for Cities based on Province
+  const { data: citiesData } = useQuery({
+    queryKey: ["cities", provinceId],
+    queryFn: async () => {
+      if (provinceId === "all") return [];
+      const response = await apiClient.get(`/cities?province_id=${provinceId}`);
+      return response.data.data as City[];
+    },
+    enabled: provinceId !== "all",
+  });
+  const cities = citiesData || [];
 
   const [isMounted, setIsMounted] = useState(false);
   const lastUrlParamsRef = useRef(searchParams.toString());
@@ -135,15 +156,32 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     const r = searchParams.get("rating_min") || "all";
     if (r !== minRating) setMinRating(r);
 
-    const prov = searchParams.get("province_id") || "all";
-    if (prov !== provinceId) setProvinceId(prov);
+    const provSlug = searchParams.get("province");
+    const provId = provSlug ? getIdFromSlug(initialProvinces, provSlug) : (searchParams.get("province_id") || "all");
+    if (provId !== provinceId) setProvinceId(provId);
 
-    const city = searchParams.get("city_id") || "all";
-    if (city !== cityId) setCityId(city);
+    // For City, we might need to wait for cities to load, handled in a separate useEffect below
+    const citySlug = searchParams.get("city");
+    if (!citySlug) {
+      const city = searchParams.get("city_id") || "all";
+      if (city !== cityId) setCityId(city);
+    }
 
     const dist = searchParams.get("district_id") || "all";
     if (dist !== districtId) setDistrictId(dist);
-  }, [searchParams, isMounted, search, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId]);
+  }, [searchParams, isMounted, search, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, initialProvinces]);
+
+  // Sync city slug from URL once cities are loaded
+  useEffect(() => {
+    const citySlugFromUrl = searchParams.get("city");
+    if (citySlugFromUrl && cities.length > 0) {
+      const resolvedId = getIdFromSlug(cities, citySlugFromUrl);
+      const c = resolvedId !== "all" ? cities.find(c => c.id.toString() === resolvedId) : null;
+      if (c && c.id.toString() !== cityId) {
+        setCityId(c.id.toString());
+      }
+    }
+  }, [searchParams, cities]);
 
   // Debounce search input
   useEffect(() => {
@@ -165,8 +203,19 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     if (isVerified !== "all") params.append("is_verified", isVerified);
     if (isPremium !== "all") params.append("is_premium", isPremium);
     if (minRating !== "all") params.append("rating_min", minRating);
-    if (provinceId !== "all") params.append("province_id", provinceId);
-    if (cityId !== "all") params.append("city_id", cityId);
+    
+    if (provinceId !== "all") {
+      const slug = getSlugFromId(initialProvinces, provinceId);
+      if (slug) params.append("province", slug);
+      else params.append("province_id", provinceId);
+    }
+    
+    if (cityId !== "all") {
+      const slug = getSlugFromId(cities, cityId);
+      if (slug) params.append("city", slug);
+      else params.append("city_id", cityId);
+    }
+    
     if (districtId !== "all") params.append("district_id", districtId);
 
     const queryString = params.toString();
@@ -214,18 +263,6 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     setProvinceId("all");
     setCityId("all");
   };
-
-  // Query for Cities based on Province
-  const { data: citiesData } = useQuery({
-    queryKey: ["cities", provinceId],
-    queryFn: async () => {
-      if (provinceId === "all") return [];
-      const response = await apiClient.get(`/cities?province_id=${provinceId}`);
-      return response.data.data as City[];
-    },
-    enabled: provinceId !== "all",
-  });
-  const cities = citiesData || [];
 
   const FilterSidebar = () => (
     <div className="space-y-8">

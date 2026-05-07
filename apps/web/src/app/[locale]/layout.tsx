@@ -4,6 +4,7 @@ import { getMessages } from "next-intl/server";
 import { Providers } from "@/components/providers/Providers";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { PageTransition } from "@/components/layout/PageTransition";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,7 +27,7 @@ export async function generateMetadata({
   const t = messages.home?.hero;
 
   return {
-    title: locale === "id" ? "Handyman - Temukan Tukang Terpercaya" : "Handyman - Find Trusted Handymen",
+    title: locale === "id" ? "Cari Tukang - Tempat cari tukang profesional dan terpercaya" : "Cari Tukang - Find professional and trusted handymen",
     description: locale === "id" 
       ? "Platform untuk menemukan tukang profesional di Indonesia"
       : "Platform to find professional handymen in Indonesia",
@@ -52,7 +53,9 @@ export default async function RootLayout({
         <Providers locale={locale} messages={messages}>
           <Navbar />
           <div className="flex-1 flex flex-col relative min-h-0">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </div>
           <Footer />
         </Providers>

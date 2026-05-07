@@ -25,18 +25,18 @@
     "findHandyman": "Cari Tukang",
     "explore": "Jelajahi",
     "projects": "Proyek",
-    "login": "Masuk",
-    "signIn": "Masuk",
+    "login": "Login",
+    "signIn": "Login",
     "register": "Daftar",
     "dashboard": "Dashboard",
     "account": "Akun Saya"
   },
   "home": {
     "hero": {
-      "title": "Tukang Profesional & Terpercaya di Sekitar Anda.",
-      "subtitle": "Temukan tukang profesional untuk pembangunan, renovasi, dan pekerjaan lainnya.",
+      "title": "Pusatnya Cari Tukang Profesional & Terpercaya.",
+      "subtitle": "Temukan tukang profesional dan terpercaya disekitar anda untuk kebutuhan pembangunan, renovasi, dan pekerjaan lainnya.",
       "categoryPlaceholder": "Plih Kategori Tukang",
-      "allCategories": "Semua Kategori",
+      "allCategories": "Semua Kategori Tukang",
       "locationPlaceholder": "Ketik Lokasi Anda",
       "ctaSearch": "Cari Tukang"
     },
@@ -98,15 +98,15 @@
     "reviews": "Ulasan Saya"
   },
   "categories": {
-    "electrical": "Tukang Listrik",
-    "plumbing": "Tukang Ledeng",
-    "construction": "Tukang Bangunan",
-    "painting": "Tukang Cat",
-    "ac-repair": "Tukang Servis AC",
-    "carpentry": "Tukang Kayu",
-    "roofing": "Tukang Atap",
-    "tiling": "Tukang Keramik",
-    "cleaning": "Tukang Jasa Kebersihan",
+    "electrical": "Listrik",
+    "plumbing": "Ledeng",
+    "construction": "Bangunan",
+    "painting": "Cat",
+    "ac-repair": "AC",
+    "carpentry": "Kayu",
+    "roofing": "Atap",
+    "tiling": "Keramik",
+    "cleaning": "Kebersihan",
     "other": "Lainnya",
     "all": "Semua"
   }

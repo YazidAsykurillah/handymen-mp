@@ -48,29 +48,38 @@ interface CategoryCardProps {
   className?: string;
 }
 
+import { motion } from "framer-motion";
+
 export function CategoryCard({ category, onClick, className }: CategoryCardProps) {
   const ct = useTranslations("categories");
   const Icon = ICON_MAP[category.slug] || Wrench;
 
   return (
-    <Card
-      onClick={onClick}
-      className={cn(
-        "flex flex-col items-center justify-center p-10 rounded-[2.5rem] bg-white border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group relative",
-        className
-      )}
+    <motion.div
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      className="h-full"
     >
-      {category.isPopular && (
-        <Badge className="absolute top-6 right-6 bg-secondary text-secondary-foreground hover:bg-secondary font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">
-          Popular
-        </Badge>
-      )}
-      <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-        <Icon className="w-8 h-8 text-primary" />
-      </div>
-      <span className="font-heading font-semibold text-xl text-primary text-center">
-        {ct(category.slug)}
-      </span>
-    </Card>
+      <Card
+        onClick={onClick}
+        className={cn(
+          "flex flex-col items-center justify-center p-10 rounded-[2.5rem] bg-white border border-border shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer group relative h-full",
+          className
+        )}
+      >
+        {category.isPopular && (
+          <Badge className="absolute top-6 right-6 bg-secondary text-secondary-foreground hover:bg-secondary font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">
+            Popular
+          </Badge>
+        )}
+        <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+          <Icon className="w-8 h-8 text-primary" />
+        </div>
+        <span className="font-heading font-semibold text-xl text-primary text-center group-hover:text-secondary transition-colors">
+          {ct(category.slug)}
+        </span>
+      </Card>
+    </motion.div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Globe, Menu } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -33,9 +34,10 @@ export default function Navbar() {
       <div className="container mx-auto px-6 md:px-16 h-20 flex items-center justify-between gap-4">
         {/* Logo Section */}
         <div className="flex items-center gap-8 flex-1">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-0">
+            <Image src="/images/logo-transparent.png" alt="Handyman Logo" width={32} height={32} className="object-contain" />
             <span className="font-heading font-bold text-2xl tracking-tight text-primary">
-              Handyman
+              {process.env.NEXT_PUBLIC_APP_NAME || "Handyman"}
             </span>
           </Link>
         </div>
@@ -60,9 +62,8 @@ export default function Navbar() {
             <Link
               href={pathname}
               locale="id"
-              className={`text-xs font-bold transition-colors ${
-                locale === "id" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`text-xs font-bold transition-colors ${locale === "id" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               ID
             </Link>
@@ -70,9 +71,8 @@ export default function Navbar() {
             <Link
               href={pathname}
               locale="en"
-              className={`text-xs font-bold transition-colors ${
-                locale === "en" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
-              }`}
+              className={`text-xs font-bold transition-colors ${locale === "en" ? "text-primary underline underline-offset-4" : "text-muted-foreground hover:text-foreground"
+                }`}
             >
               EN
             </Link>
@@ -106,7 +106,10 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetHeader className="text-left">
                 <SheetTitle className="font-heading font-bold text-2xl text-primary">
-                  <Link href="/" onClick={handleLinkClick}>Handyman</Link>
+                  <Link href="/" onClick={handleLinkClick} className="flex items-center gap-2">
+                    <Image src="/images/logo-transparent.png" alt="Handyman Logo" width={28} height={28} className="object-contain" />
+                    {process.env.NEXT_PUBLIC_APP_NAME || "Handyman"}
+                  </Link>
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-6 mt-12 px-6">

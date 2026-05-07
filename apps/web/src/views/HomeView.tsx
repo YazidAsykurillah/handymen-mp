@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
@@ -150,22 +151,43 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
               {categories?.map((c) => (
-                <CategoryCard
+                <motion.div
                   key={c.id}
-                  category={{
-                    ...c,
-                    isPopular: (c.handymen_count || 0) > 0 && c.handymen_count === maxHandymenCount
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0 }
                   }}
-                  onClick={() => {
-                    const params = new URLSearchParams();
-                    params.append("category", c.slug);
-                    router.push(`/explore?${params.toString()}`);
-                  }}
-                />
+                >
+                  <CategoryCard
+                    category={{
+                      ...c,
+                      isPopular: (c.handymen_count || 0) > 0 && c.handymen_count === maxHandymenCount
+                    }}
+                    onClick={() => {
+                      const params = new URLSearchParams();
+                      params.append("category", c.slug);
+                      router.push(`/explore?${params.toString()}`);
+                    }}
+                  />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
         </div>
       </section>
