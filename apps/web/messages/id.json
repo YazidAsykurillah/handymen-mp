@@ -64,8 +64,21 @@
     "categories": "Kategori Tukang",
     "location": "Lokasi",
     "portfolio": "Portofolio",
-    "contactViaWhatsapp": "Hubungi via WhatsApp",
-    "writeReview": "Tulis Ulasan"
+    "contactViaWhatsApp": "Hubungi via WhatsApp",
+    "writeReview": "Tulis Ulasan",
+    "about": "Tentang",
+    "services": "Layanan yang Ditawarkan",
+    "reviews": "Ulasan",
+    "verified": "Profesional Terverifikasi",
+    "premium": "Anggota Premium",
+    "noPortfolio": "Belum ada portofolio.",
+    "noReviews": "Belum ada ulasan. Jadilah yang pertama mengulas!",
+    "loadMore": "Muat Ulasan Lainnya",
+    "memberSince": "Anggota Sejak",
+    "backToExplore": "Kembali ke Pencarian",
+    "whatsappMessage": "Halo, saya menemukan Anda di Cari Tukang!",
+    "reviewCount": "{count} ulasan",
+    "outOf": "dari 5"
   },
   "auth": {
     "login": "Masuk",

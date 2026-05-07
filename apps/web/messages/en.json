@@ -64,7 +64,20 @@
     "location": "Location",
     "portfolio": "Portfolio",
     "contactViaWhatsApp": "Contact via WhatsApp",
-    "writeReview": "Write a Review"
+    "writeReview": "Write a Review",
+    "about": "About",
+    "services": "Services Offered",
+    "reviews": "Reviews",
+    "verified": "Verified Professional",
+    "premium": "Premium Member",
+    "noPortfolio": "No portfolio items yet.",
+    "noReviews": "No reviews yet. Be the first to review!",
+    "loadMore": "Load More Reviews",
+    "memberSince": "Member Since",
+    "backToExplore": "Back to Search",
+    "whatsappMessage": "Hi, I found you on Cari Tukang!",
+    "reviewCount": "{count} reviews",
+    "outOf": "out of 5"
   },
   "auth": {
     "login": "Login",
