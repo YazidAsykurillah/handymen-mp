@@ -155,7 +155,7 @@ export default function HandymanDetailView({ initialData, slug }: HandymanDetail
   return (
     <main className="flex-1 flex flex-col bg-background">
       {/* Breadcrumbs */}
-      <div className="container mx-auto px-6 pt-6">
+      <div className="container mx-auto px-6 md:px-16 pt-6">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1">
             <Home className="w-3.5 h-3.5" />
@@ -173,7 +173,7 @@ export default function HandymanDetailView({ initialData, slug }: HandymanDetail
       </div>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-10">
+      <section className="container mx-auto px-6 md:px-16 py-10">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Profile Photo */}
           <motion.div
@@ -294,7 +294,7 @@ export default function HandymanDetailView({ initialData, slug }: HandymanDetail
       </section>
 
       {/* Content Sections */}
-      <section className="container mx-auto px-6 pb-20">
+      <section className="container mx-auto px-6 md:px-16 pb-20">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Main Content */}
           <div className="flex-1 min-w-0">
