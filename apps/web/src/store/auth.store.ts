@@ -6,7 +6,8 @@ interface AuthUser {
   name: string;
   email: string;
   phone?: string;
-  role: "super_admin" | "admin" | "handyman" | "user";
+  roles: string[];
+  permissions: string[];
 }
 
 interface AuthState {

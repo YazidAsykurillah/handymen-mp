@@ -9,7 +9,6 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
     "Accept": "application/json",
   },
-  withCredentials: true,
 });
 
 // Attach token from Zustand store on every request
@@ -27,7 +26,8 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().clearAuth();
-      if (typeof window !== 'undefined') {
+      // Do not redirect if the request was the login attempt itself
+      if (typeof window !== 'undefined' && !error.config?.url?.includes('/auth/login')) {
         window.location.href = "/auth/login";
       }
     }

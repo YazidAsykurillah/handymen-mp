@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Globe, Menu } from "lucide-react";
+import { Globe, Menu, LogOut, User, LayoutDashboard } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { useAuthStore } from "@/store/auth.store";
+import { apiClient } from "@/lib/api";
+import { toast } from "sonner";
 import {
   Sheet,
   SheetContent,
@@ -13,12 +16,28 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const locale = useLocale();
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  // Hydration-safe auth state
+  const [mounted, setMounted] = useState(false);
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const clearAuth = useAuthStore((s) => s.clearAuth);
+
+  useEffect(() => setMounted(true), []);
 
   const navLinks = [
     { href: "/explore", label: t("explore") },
@@ -28,6 +47,28 @@ export default function Navbar() {
   const handleLinkClick = () => {
     setOpen(false);
   };
+
+  const handleLogout = async () => {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch {
+      // ignore — token might already be expired
+    }
+    clearAuth();
+    toast.success("Logged out successfully.");
+    router.push("/");
+  };
+
+  // Get initials for avatar
+  const initials = user?.name
+    ?.split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "U";
+
+  // Only show auth state after mount to avoid hydration mismatch
+  const showAuth = mounted && isAuthenticated && user;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -81,19 +122,56 @@ export default function Navbar() {
 
         {/* Actions Links */}
         <div className="flex items-center gap-3 sm:gap-6">
-          <Link href="/auth/login" className="hidden sm:block">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
-              {t("signIn")}
-            </Button>
-          </Link>
+          {showAuth ? (
+            /* Logged-in: User Dropdown */
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-xs font-bold text-primary">{initials}</span>
+                    </div>
+                    <span className="text-sm font-semibold text-primary hidden sm:inline max-w-[120px] truncate">
+                      {user.name}
+                    </span>
+                  </button>
+                }
+              />
+              <DropdownMenuContent align="end" className="w-48 rounded-xl">
+                <Link href="/dashboard" className="w-full">
+                  <DropdownMenuItem className="gap-2 cursor-pointer">
+                    <LayoutDashboard className="w-4 h-4" />
+                    {t("dashboard")}
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="gap-2 cursor-pointer text-destructive focus:text-destructive"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            /* Logged-out: Login & Register */
+            <>
+              <Link href="/auth/login" className="hidden sm:block">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
+                  {t("signIn")}
+                </Button>
+              </Link>
 
-          <Link href="/auth/register" className="hidden sm:block">
-            <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
-              {t("register")}
-            </Button>
-          </Link>
+              <Link href="/auth/register" className="hidden sm:block">
+                <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
+                  {t("register")}
+                </Button>
+              </Link>
+            </>
+          )}
 
-          {/* Mobile Menu Trigger moved to the right */}
+          {/* Mobile Menu Trigger */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               render={
@@ -124,20 +202,49 @@ export default function Navbar() {
                   </Link>
                 ))}
                 <hr className="border-border my-2" />
-                <Link
-                  href="/auth/login"
-                  onClick={handleLinkClick}
-                  className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {t("signIn")}
-                </Link>
-                <Link
-                  href="/auth/register"
-                  onClick={handleLinkClick}
-                  className="text-xl font-heading font-semibold text-secondary hover:text-secondary/80 transition-colors"
-                >
-                  {t("register")}
-                </Link>
+                {showAuth ? (
+                  <>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary">{initials}</span>
+                      </div>
+                      <div>
+                        <p className="font-heading font-semibold text-primary text-sm">{user.name}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/dashboard"
+                      onClick={handleLinkClick}
+                      className="text-xl font-heading font-semibold text-primary hover:text-primary/80 transition-colors"
+                    >
+                      {t("dashboard")}
+                    </Link>
+                    <button
+                      onClick={() => { handleLogout(); handleLinkClick(); }}
+                      className="text-xl font-heading font-semibold text-destructive hover:text-destructive/80 transition-colors text-left"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/auth/login"
+                      onClick={handleLinkClick}
+                      className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {t("signIn")}
+                    </Link>
+                    <Link
+                      href="/auth/register"
+                      onClick={handleLinkClick}
+                      className="text-xl font-heading font-semibold text-secondary hover:text-secondary/80 transition-colors"
+                    >
+                      {t("register")}
+                    </Link>
+                  </>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
