@@ -157,15 +157,16 @@ export default function Navbar() {
           ) : (
             /* Logged-out: Login & Register */
             <>
-              <Link href="/auth/login" className="hidden sm:block">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
-                  {t("signIn")}
-                </Button>
-              </Link>
+
 
               <Link href="/auth/register" className="hidden sm:block">
-                <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
                   {t("register")}
+                </Button>
+              </Link>
+              <Link href="/auth/login" className="hidden sm:block">
+                <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full px-4 sm:px-8 font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm whitespace-nowrap">
+                  {t("signIn")}
                 </Button>
               </Link>
             </>
@@ -232,16 +233,20 @@ export default function Navbar() {
                     <Link
                       href="/auth/login"
                       onClick={handleLinkClick}
-                      className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
+                      className="w-full"
                     >
-                      {t("signIn")}
+                      <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-xl py-6 text-lg font-bold shadow-sm transition-all active:scale-95">
+                        {t("signIn")}
+                      </Button>
                     </Link>
                     <Link
                       href="/auth/register"
                       onClick={handleLinkClick}
-                      className="text-xl font-heading font-semibold text-secondary hover:text-secondary/80 transition-colors"
+                      className="w-full"
                     >
-                      {t("register")}
+                      <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground py-6 text-lg font-semibold">
+                        {t("register")}
+                      </Button>
                     </Link>
                   </>
                 )}

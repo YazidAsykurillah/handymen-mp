@@ -66,7 +66,7 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
                 <CheckCircle2 className="w-4 h-4 text-blue-500" />
               )}
             </div>
-            <h4 className="font-heading font-bold text-xl text-primary mb-2 truncate group-hover:text-secondary transition-colors">
+            <h4 className="font-heading font-bold text-xl text-primary mb-2 truncate">
               {handyman.name}
             </h4>
             {handyman.province?.name && handyman.city?.name && (

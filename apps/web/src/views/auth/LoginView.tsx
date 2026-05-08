@@ -77,7 +77,7 @@ export default function LoginView() {
       </div>
 
       {/* Right Panel — Form */}
-      <div className="flex-1 flex items-center justify-center p-6 md:p-12">
+      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:items-center md:p-12 md:pt-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
