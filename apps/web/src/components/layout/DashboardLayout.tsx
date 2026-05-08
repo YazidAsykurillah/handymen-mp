@@ -43,7 +43,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-white dark:bg-background border-r border-border/40">
-      <div className="p-6">
+      <div className="p-6 lg:hidden border-b border-border/40">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/images/logo-transparent.png"
@@ -129,14 +129,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   );
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
+    <div className="flex min-h-[calc(100vh-5rem)] bg-muted/30">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-72 fixed inset-y-0 z-40">
+      <aside className="hidden lg:block w-72 sticky top-20 h-[calc(100vh-5rem)] z-30">
         <SidebarContent />
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 lg:pl-72 flex flex-col min-h-screen">
+      <main className="flex-1 flex flex-col min-w-0 w-full">
         {/* Mobile Header */}
         <header className="lg:hidden sticky top-0 z-30 flex items-center h-16 px-4 bg-background border-b border-border/40">
           <Sheet open={open} onOpenChange={setOpen}>
