@@ -45,6 +45,7 @@ class HandymanProfileController extends ApiController
             'longitude'   => 'sometimes|numeric',
             'province_id' => 'sometimes|exists:provinces,id',
             'city_id'     => 'sometimes|exists:cities,id',
+            'district_id' => 'sometimes|exists:districts,id',
         ]);
 
         $data = $request->all();

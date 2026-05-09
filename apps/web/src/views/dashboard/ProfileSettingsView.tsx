@@ -23,6 +23,11 @@ interface City {
   name: string;
 }
 
+interface District {
+  id: number;
+  name: string;
+}
+
 interface Category {
   id: number;
   name: string;
@@ -37,6 +42,8 @@ interface HandymanProfile {
   whatsapp: string | null;
   province_id: number;
   city_id: number;
+  district_id: number | null;
+  address: string | null;
   categories: Category[];
 }
 
@@ -60,6 +67,8 @@ export default function ProfileSettingsView({
   const [hmWhatsapp, setHmWhatsapp] = useState("");
   const [provinceId, setProvinceId] = useState("");
   const [cityId, setCityId] = useState("");
+  const [districtId, setDistrictId] = useState("");
+  const [hmAddress, setHmAddress] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [isUpdatingHandyman, setIsUpdatingHandyman] = useState(false);
 
@@ -80,6 +89,8 @@ export default function ProfileSettingsView({
       setHmWhatsapp(hmData.whatsapp || "");
       setProvinceId(hmData.province_id?.toString() || "");
       setCityId(hmData.city_id?.toString() || "");
+      setDistrictId(hmData.district_id?.toString() || "");
+      setHmAddress(hmData.address || "");
       setSelectedCategories(hmData.categories?.map((c) => c.id) || []);
     }
   }, [hmData]);
@@ -94,6 +105,17 @@ export default function ProfileSettingsView({
     enabled: !!provinceId,
   });
   const cities = citiesData || [];
+
+  // Fetch districts when city changes
+  const { data: districtsData } = useQuery({
+    queryKey: ["districts", cityId],
+    queryFn: async () => {
+      const res = await apiClient.get(`/districts?city_id=${cityId}`);
+      return res.data.data as District[];
+    },
+    enabled: !!cityId,
+  });
+  const districts = districtsData || [];
 
   const toggleCategory = (id: number) => {
     setSelectedCategories((prev) =>
@@ -111,8 +133,10 @@ export default function ProfileSettingsView({
         whatsapp: hmWhatsapp,
         province_id: provinceId,
         city_id: cityId,
+        district_id: districtId,
+        address: hmAddress,
       });
-      
+
       // Update categories in separate request
       await apiClient.put("/handyman/categories", {
         categories: selectedCategories,
@@ -156,46 +180,6 @@ export default function ProfileSettingsView({
                     <Input value={hmName} onChange={(e) => setHmName(e.target.value)} required className="h-12 rounded-xl border-border bg-white" />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>{t("province")}</Label>
-                    <Select value={provinceId} onValueChange={(val) => { if(val) { setProvinceId(val); setCityId(""); } }}>
-                      <SelectTrigger className="h-12 rounded-xl w-full border-border bg-white">
-                        <SelectValue placeholder={t("selectProvince")}>
-                          {provinceId ? initialProvinces.find(p => p.id.toString() === provinceId)?.name : null}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {initialProvinces.map((p) => (
-                          <SelectItem key={p.id} value={p.id.toString()}>{p.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>{t("city")}</Label>
-                    <Select value={cityId} onValueChange={(val) => { if(val) setCityId(val); }} disabled={!provinceId}>
-                      <SelectTrigger className="h-12 rounded-xl w-full border-border bg-white">
-                        <SelectValue placeholder={t("selectCity")}>
-                          {cityId ? cities.find(c => c.id.toString() === cityId)?.name : null}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {cities.map((c) => (
-                          <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>{t("whatsapp")}</Label>
-                  <Input value={hmWhatsapp} onChange={(e) => setHmWhatsapp(e.target.value)} type="tel" className="h-12 rounded-xl border-border bg-white" />
-                </div>
-
                 <div className="space-y-2">
                   <Label>{dt("categories")}</Label>
                   <div className="flex flex-wrap gap-2">
@@ -206,11 +190,10 @@ export default function ProfileSettingsView({
                           key={cat.id}
                           type="button"
                           onClick={() => toggleCategory(cat.id)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                            isSelected
+                          className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${isSelected
                               ? "bg-primary text-white border-primary"
                               : "bg-white dark:bg-muted text-muted-foreground border-border hover:border-primary hover:text-primary"
-                          }`}
+                            }`}
                         >
                           {isSelected && <CheckCircle2 className="w-3 h-3 inline mr-1" />}
                           {ct(cat.slug)}
@@ -219,6 +202,81 @@ export default function ProfileSettingsView({
                     })}
                   </div>
                 </div>
+                {/* Location Group */}
+                <div className="pt-6 border-t border-border/40 mt-6 space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+                      {t("location")}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>{t("province")}</Label>
+                      <Select value={provinceId} onValueChange={(val) => { if (val) { setProvinceId(val); setCityId(""); } }}>
+                        <SelectTrigger className="h-12 rounded-xl w-full border-border bg-white">
+                          <SelectValue placeholder={t("selectProvince")}>
+                            {provinceId ? initialProvinces.find(p => p.id.toString() === provinceId)?.name : null}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {initialProvinces.map((p) => (
+                            <SelectItem key={p.id} value={p.id.toString()}>{p.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>{t("city")}</Label>
+                      <Select value={cityId} onValueChange={(val) => { if (val) { setCityId(val); setDistrictId(""); } }} disabled={!provinceId}>
+                        <SelectTrigger className="h-12 rounded-xl w-full border-border bg-white">
+                          <SelectValue placeholder={t("selectCity")}>
+                            {cityId ? cities.find(c => c.id.toString() === cityId)?.name : null}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cities.map((c) => (
+                            <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>{t("district")}</Label>
+                      <Select value={districtId} onValueChange={(val) => { if (val) setDistrictId(val); }} disabled={!cityId}>
+                        <SelectTrigger className="h-12 rounded-xl w-full border-border bg-white">
+                          <SelectValue placeholder={t("selectDistrict")}>
+                            {districtId ? districts.find(d => d.id.toString() === districtId)?.name : null}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {districts.map((d) => (
+                            <SelectItem key={d.id} value={d.id.toString()}>{d.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>{t("address")}</Label>
+                      <Input
+                        value={hmAddress}
+                        onChange={(e) => setHmAddress(e.target.value)}
+                        placeholder={t("addressPlaceholder")}
+                        className="h-12 rounded-xl border-border bg-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>{t("whatsapp")}</Label>
+                  <Input value={hmWhatsapp} onChange={(e) => setHmWhatsapp(e.target.value)} type="tel" className="h-12 rounded-xl border-border bg-white" />
+                </div>
+
+
 
                 <div className="space-y-2">
                   <Label>{t("bio")}</Label>

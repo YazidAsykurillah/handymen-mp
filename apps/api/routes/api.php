@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum', 'role:handyman'])->prefix('handyman')->group(
 Route::get('/categories', [ReferenceDataController::class, 'categories']);
 Route::get('/provinces', [ReferenceDataController::class, 'provinces']);
 Route::get('/cities', [ReferenceDataController::class, 'cities']);
+Route::get('/districts', [ReferenceDataController::class, 'districts']);
 Route::get('/locations/search', [LocationSearchController::class, 'search']);
 
 // User & Reviews (Protected)

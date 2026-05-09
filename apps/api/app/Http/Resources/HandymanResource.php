@@ -27,6 +27,7 @@ class HandymanResource extends JsonResource
                 : null,
             'province_id'   => $this->province_id,
             'city_id'       => $this->city_id,
+            'district_id'   => $this->district_id,
             'address'       => $this->address,
             'latitude'      => $this->latitude,
             'longitude'     => $this->longitude,
@@ -36,6 +37,7 @@ class HandymanResource extends JsonResource
             'review_count'  => $this->review_count,
             'city'          => new CityResource($this->whenLoaded('city')),
             'province'      => new ProvinceResource($this->whenLoaded('province')),
+            'district'      => new DistrictResource($this->whenLoaded('district')),
             'categories'    => CategoryResource::collection($this->whenLoaded('categories')),
             'portfolios'    => PortfolioResource::collection($this->whenLoaded('portfolios')),
         ];

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Province;
+use App\Models\District;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\ProvinceResource;
+use App\Http\Resources\DistrictResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -46,5 +48,20 @@ class ReferenceDataController extends ApiController
 
         $cities = $query->get();
         return CityResource::collection($cities);
+    }
+
+    /**
+     * Get all districts, optionally filtered by city.
+     */
+    public function districts(Request $request)
+    {
+        $query = District::query();
+
+        if ($request->has('city_id')) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        $districts = $query->get();
+        return DistrictResource::collection($districts);
     }
 }
