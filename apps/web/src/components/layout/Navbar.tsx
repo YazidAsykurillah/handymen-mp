@@ -81,7 +81,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8 flex-1">
           <Link href="/" className="flex items-center gap-0">
             <Image src="/images/logo-transparent.png" alt="Handyman Logo" width={32} height={32} className="object-contain" />
-            <span className="font-heading font-bold text-2xl tracking-tight text-primary">
+            <span className="font-heading font-bold text-lg sm:text-2xl tracking-tight text-primary">
               {process.env.NEXT_PUBLIC_APP_NAME || "Handyman"}
             </span>
           </Link>
