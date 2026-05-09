@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth.store";
 import { apiClient } from "@/lib/api";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2, Wrench } from "lucide-react";
+import { Loader2, CheckCircle2, Wrench, Camera, Trash2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +44,7 @@ interface HandymanProfile {
   city_id: number;
   district_id: number | null;
   address: string | null;
+  photo_profile: string | null;
   categories: Category[];
 }
 
@@ -70,7 +71,9 @@ export default function ProfileSettingsView({
   const [districtId, setDistrictId] = useState("");
   const [hmAddress, setHmAddress] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [isUpdatingHandyman, setIsUpdatingHandyman] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   // Fetch Handyman Profile
   const { data: hmData, isLoading: isLoadingHm } = useQuery({
@@ -91,6 +94,7 @@ export default function ProfileSettingsView({
       setCityId(hmData.city_id?.toString() || "");
       setDistrictId(hmData.district_id?.toString() || "");
       setHmAddress(hmData.address || "");
+      setPhotoUrl(hmData.photo_profile);
       setSelectedCategories(hmData.categories?.map((c) => c.id) || []);
     }
   }, [hmData]);
@@ -150,6 +154,45 @@ export default function ProfileSettingsView({
     }
   };
 
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Photo is too large. Max 2MB.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    setIsUploadingPhoto(true);
+    try {
+      const res = await apiClient.post("/handyman/profile/photo", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setPhotoUrl(res.data.data.photo_profile);
+      toast.success("Profile photo updated.");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Upload failed.");
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleDeletePhoto = async () => {
+    if (!confirm("Are you sure you want to remove your profile photo?")) return;
+    
+    try {
+      await apiClient.delete("/handyman/profile/photo");
+      setPhotoUrl(null);
+      toast.success("Profile photo removed.");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Action failed.");
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -173,6 +216,45 @@ export default function ProfileSettingsView({
               <h2 className="text-xl font-heading font-semibold">Marketplace Profile</h2>
             </div>
             <div className="p-6">
+              <div className="mb-8 flex flex-col sm:flex-row items-center gap-6">
+                <div className="relative group">
+                  <div className="w-32 h-32 rounded-2xl bg-muted border-2 border-dashed border-border overflow-hidden flex items-center justify-center relative">
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-12 h-12 text-muted-foreground" />
+                    )}
+                    {isUploadingPhoto && (
+                      <div className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                      </div>
+                    )}
+                  </div>
+                  <label className="absolute -bottom-2 -right-2 p-2 bg-primary text-white rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-transform active:scale-95">
+                    <Camera className="w-5 h-5" />
+                    <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} disabled={isUploadingPhoto} />
+                  </label>
+                </div>
+                
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="font-heading font-semibold text-lg mb-1">Profile Photo</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Upload a professional photo to build trust with customers. Max 2MB (JPG, PNG).
+                  </p>
+                  {photoUrl && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleDeletePhoto}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10 -ml-3"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Remove Photo
+                    </Button>
+                  )}
+                </div>
+              </div>
+
               <form onSubmit={handleUpdateHandyman} className="space-y-6 max-w-2xl">
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
