@@ -55,7 +55,7 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
               </div>
             )}
           </div>
-          <div className="p-6 flex-1 flex flex-col">
+          <div className="p-4 sm:p-6 flex-1 flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <Star className="w-4 h-4 fill-secondary text-secondary" />
@@ -66,7 +66,7 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
                 <CheckCircle2 className="w-4 h-4 text-blue-500" />
               )}
             </div>
-            <h4 className="font-heading font-bold text-xl text-primary mb-2 truncate">
+            <h4 className="font-heading font-bold text-lg sm:text-xl text-primary mb-2 truncate">
               {handyman.name}
             </h4>
             {handyman.province?.name && handyman.city?.name && (
