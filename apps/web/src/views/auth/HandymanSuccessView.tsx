@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { CheckCircle2, Clock, Search, ShieldCheck, Bell, Home } from "lucide-react";
+import { CheckCircle2, Clock, ShieldCheck, Bell, Home, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -17,7 +17,7 @@ export default function HandymanSuccessView() {
   ];
 
   return (
-    <main className="flex-1 flex items-center justify-center min-h-[calc(100vh-5rem)] px-6">
+    <main className="flex-1 flex items-center justify-center min-h-[calc(100vh-5rem)] px-6 pt-12 pb-24">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -43,7 +43,7 @@ export default function HandymanSuccessView() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.4 }}
-          className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-primary mb-4"
         >
           {t("handymanSuccessTitle")}
         </motion.h1>
@@ -52,7 +52,7 @@ export default function HandymanSuccessView() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
-          className="text-muted-foreground text-lg leading-relaxed mb-10"
+          className="text-muted-foreground text-sm sm:text-base md:text-lg leading-relaxed mb-10"
         >
           {t("handymanSuccessSubtitle")}
         </motion.p>
@@ -95,13 +95,13 @@ export default function HandymanSuccessView() {
           transition={{ delay: 0.9, duration: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/explore">
+          <Link href="/dashboard/profile">
             <Button
               size="lg"
               className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-full gap-2 px-8 font-bold shadow-lg"
             >
-              <Search className="w-5 h-5" />
-              {t("handymanSuccessExplore")}
+              <UserCircle className="w-5 h-5" />
+              {t("handymanSuccessProfile")}
             </Button>
           </Link>
           <Link href="/">

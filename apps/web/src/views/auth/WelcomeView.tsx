@@ -31,7 +31,7 @@ export default function WelcomeView() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.4 }}
-          className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4"
+          className="text-base sm:text-3xl font-heading font-bold text-primary mb-4"
         >
           {t("welcomeTitle")}
         </motion.h1>
@@ -40,7 +40,7 @@ export default function WelcomeView() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
-          className="text-muted-foreground text-lg leading-relaxed mb-10"
+          className="text-muted-foreground text-sm sm:text-lg leading-relaxed mb-10"
         >
           {t("welcomeSubtitle")}
         </motion.p>
@@ -60,7 +60,7 @@ export default function WelcomeView() {
               {t("welcomeExplore")}
             </Button>
           </Link>
-          <Link href="/">
+          <Link href="/dashboard">
             <Button
               size="lg"
               variant="outline"

@@ -39,7 +39,6 @@ class HandymanProfileController extends ApiController
         $request->validate([
             'name'        => 'sometimes|string|max:255',
             'bio'         => 'sometimes|string',
-            'phone'       => 'sometimes|string|max:20',
             'whatsapp'    => 'sometimes|string|max:20',
             'address'     => 'sometimes|string|max:255',
             'latitude'    => 'sometimes|numeric',
@@ -48,7 +47,12 @@ class HandymanProfileController extends ApiController
             'city_id'     => 'sometimes|exists:cities,id',
         ]);
 
-        $handyman->update($request->all());
+        $data = $request->all();
+        if ($request->has('whatsapp')) {
+            $data['phone'] = $request->whatsapp;
+        }
+
+        $handyman->update($data);
 
         return $this->success(new HandymanResource($handyman), 'Profile updated successfully.');
     }

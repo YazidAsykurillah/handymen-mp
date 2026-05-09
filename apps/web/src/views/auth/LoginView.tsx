@@ -32,7 +32,7 @@ export default function LoginView() {
       const res = await apiClient.post("/auth/login", { email, password });
       setAuth(res.data.data.user, res.data.data.token);
       toast.success(t("loginSuccess"));
-      router.push("/");
+      router.push("/dashboard");
     } catch (err: any) {
       if (err.response?.status === 422) {
         setErrors(err.response.data.errors || {});
@@ -54,7 +54,7 @@ export default function LoginView() {
   return (
     <main className="flex-1 flex min-h-[calc(100vh-5rem)]">
       {/* Left Panel — Branding */}
-      <div className="hidden lg:flex w-[45%] bg-primary relative items-center justify-center overflow-hidden">
+      <div className="hidden lg:flex w-[45%] bg-primary relative items-start justify-center overflow-hidden pt-32">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/80" />
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-secondary blur-3xl" />
@@ -77,7 +77,7 @@ export default function LoginView() {
       </div>
 
       {/* Right Panel — Form */}
-      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:items-center md:p-12 md:pt-0">
+      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:p-12 md:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -100,7 +100,7 @@ export default function LoginView() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("emailPlaceholder")}
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl border-border bg-white"
                 required
               />
               <FieldError field="email" />
@@ -123,7 +123,7 @@ export default function LoginView() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t("passwordPlaceholder")}
-                  className="h-12 rounded-xl pr-12"
+                  className="h-12 rounded-xl pr-12 border-border bg-white"
                   required
                 />
                 <button

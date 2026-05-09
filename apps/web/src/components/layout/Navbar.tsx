@@ -23,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 
 export default function Navbar() {
   const locale = useLocale();
@@ -30,9 +31,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const isDashboard = pathname.startsWith("/dashboard");
 
   // Hydration-safe auth state
   const [mounted, setMounted] = useState(false);
+  const hasHydrated = useAuthStore((s) => s._hasHydrated);
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const clearAuth = useAuthStore((s) => s.clearAuth);
@@ -67,8 +71,8 @@ export default function Navbar() {
     .join("")
     .toUpperCase() || "U";
 
-  // Only show auth state after mount to avoid hydration mismatch
-  const showAuth = mounted && isAuthenticated && user;
+  // Only show auth state after mount AND hydration to avoid hydration mismatch
+  const showAuth = mounted && hasHydrated && isAuthenticated && user;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -214,19 +218,13 @@ export default function Navbar() {
                         <p className="text-xs text-muted-foreground">{user.email}</p>
                       </div>
                     </div>
-                    <Link
-                      href="/dashboard"
-                      onClick={handleLinkClick}
-                      className="text-xl font-heading font-semibold text-primary hover:text-primary/80 transition-colors"
-                    >
-                      {t("dashboard")}
-                    </Link>
-                    <button
-                      onClick={() => { handleLogout(); handleLinkClick(); }}
-                      className="text-xl font-heading font-semibold text-destructive hover:text-destructive/80 transition-colors text-left"
-                    >
-                      Logout
-                    </button>
+                    <div className="flex-1 -mx-6">
+                      <DashboardSidebar 
+                        hideMobileHeader 
+                        hideBorder
+                        onLinkClick={handleLinkClick} 
+                      />
+                    </div>
                   </>
                 ) : (
                   <>

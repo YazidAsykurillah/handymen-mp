@@ -125,6 +125,7 @@
     "handymanSuccessStep2": "Once verified, your profile will appear in search results.",
     "handymanSuccessStep3": "You'll receive a notification when your profile is approved.",
     "handymanSuccessExplore": "Browse Handymen",
+    "handymanSuccessProfile": "Complete Profile",
     "handymanSuccessHome": "Go to Home",
     "registerTagline": "Join thousands of professionals and homeowners on Indonesia's trusted handyman marketplace.",
     "loginTagline": "Welcome back! Sign in to manage your account and connect with professionals."
@@ -141,7 +142,8 @@
     "title": "Dashboard",
     "description": "Manage your account and profile.",
     "overview": "Overview",
-    "profile": "Profile",
+    "profile": "Professional Profile",
+    "accountSettings": "Account Settings",
     "portfolios": "Portfolios",
     "myReviews": "My Reviews",
     "logout": "Logout",
@@ -175,5 +177,11 @@
     "cleaning": "Cleaning",
     "other": "Other",
     "all": "All"
+  },
+  "errors": {
+    "notFoundTitle": "Page Not Found",
+    "notFoundDescription": "Sorry, the page you are looking for could not be found or has been moved.",
+    "goBack": "Go Back",
+    "goHome": "Go Home"
   }
 }

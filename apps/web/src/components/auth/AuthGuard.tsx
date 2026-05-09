@@ -8,17 +8,18 @@ import { Loader2 } from "lucide-react";
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const hasHydrated = useAuthStore((s) => s._hasHydrated);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   useEffect(() => {
     setMounted(true);
-    if (mounted && !isAuthenticated) {
+    if (mounted && hasHydrated && !isAuthenticated) {
       router.replace("/auth/login");
     }
-  }, [mounted, isAuthenticated, router]);
+  }, [mounted, hasHydrated, isAuthenticated, router]);
 
-  // Prevent hydration errors by not rendering until mounted
-  if (!mounted) {
+  // Wait for both mounting and hydration
+  if (!mounted || !hasHydrated) {
     return (
       <div className="flex h-[calc(100vh-5rem)] items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

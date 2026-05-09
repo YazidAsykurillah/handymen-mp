@@ -126,6 +126,7 @@
     "handymanSuccessStep2": "Setelah diverifikasi, profil Anda akan muncul di hasil pencarian.",
     "handymanSuccessStep3": "Anda akan menerima notifikasi saat profil Anda disetujui.",
     "handymanSuccessExplore": "Jelajahi Tukang",
+    "handymanSuccessProfile": "Lengkapi Profil",
     "handymanSuccessHome": "Ke Beranda",
     "registerTagline": "Bergabung dengan ribuan profesional dan pemilik rumah di marketplace tukang terpercaya Indonesia.",
     "loginTagline": "Selamat datang kembali! Masuk untuk mengelola akun dan terhubung dengan profesional."
@@ -142,7 +143,8 @@
     "title": "Dashboard",
     "description": "Kelola akun dan profil Anda.",
     "overview": "Ringkasan",
-    "profile": "Profil",
+    "profile": "Profil Tukang",
+    "accountSettings": "Pengaturan Akun",
     "portfolios": "Portofolio",
     "myReviews": "Ulasan Saya",
     "logout": "Keluar",
@@ -176,5 +178,11 @@
     "cleaning": "Kebersihan",
     "other": "Lainnya",
     "all": "Semua"
+  },
+  "errors": {
+    "notFoundTitle": "Halaman Tidak Ditemukan",
+    "notFoundDescription": "Maaf, halaman yang Anda cari tidak dapat ditemukan atau telah dipindahkan.",
+    "goBack": "Kembali",
+    "goHome": "Ke Beranda"
   }
 }

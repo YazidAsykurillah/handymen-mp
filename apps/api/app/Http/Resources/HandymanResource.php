@@ -25,6 +25,8 @@ class HandymanResource extends JsonResource
             'photo_profile' => $this->photo_profile 
                 ? (filter_var($this->photo_profile, FILTER_VALIDATE_URL) ? $this->photo_profile : Storage::disk('public')->url($this->photo_profile)) 
                 : null,
+            'province_id'   => $this->province_id,
+            'city_id'       => $this->city_id,
             'address'       => $this->address,
             'latitude'      => $this->latitude,
             'longitude'     => $this->longitude,

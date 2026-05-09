@@ -65,7 +65,7 @@ export default function RegisterView({
   // Common fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
@@ -73,8 +73,6 @@ export default function RegisterView({
   const [provinceId, setProvinceId] = useState("");
   const [cityId, setCityId] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const [whatsapp, setWhatsapp] = useState("");
-  const [bio, setBio] = useState("");
 
   // Fetch cities when province changes
   const { data: citiesData } = useQuery({
@@ -119,7 +117,7 @@ export default function RegisterView({
         const res = await apiClient.post("/auth/register", {
           name,
           email,
-          phone,
+          whatsapp,
           password,
           password_confirmation: passwordConfirmation,
         });
@@ -130,14 +128,12 @@ export default function RegisterView({
         const res = await apiClient.post("/auth/register/handyman", {
           name,
           email,
-          phone,
+          whatsapp,
           password,
           password_confirmation: passwordConfirmation,
           province_id: provinceId,
           city_id: cityId,
           categories: selectedCategories,
-          whatsapp,
-          bio,
         });
         setAuth(res.data.data.user, res.data.data.token);
         toast.success(t("handymanRegisterSuccess"));
@@ -164,7 +160,7 @@ export default function RegisterView({
   return (
     <main className="flex-1 flex min-h-[calc(100vh-5rem)]">
       {/* Left Panel — Branding */}
-      <div className="hidden lg:flex w-[45%] bg-primary relative items-center justify-center overflow-hidden">
+      <div className="hidden lg:flex w-[45%] bg-primary relative items-start justify-center overflow-hidden pt-32">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/80" />
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-secondary blur-3xl" />
@@ -179,7 +175,7 @@ export default function RegisterView({
             <h2 className="text-4xl font-heading font-bold text-white mb-6">
               {t("register")}
             </h2>
-            <p className="text-white/70 text-lg leading-relaxed">
+            <p className="text-white/70 text-base leading-relaxed">
               {t("registerTagline")}
             </p>
           </motion.div>
@@ -187,7 +183,7 @@ export default function RegisterView({
       </div>
 
       {/* Right Panel — Form */}
-      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:items-center md:p-12 md:pt-0">
+      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:p-12 md:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -229,7 +225,7 @@ export default function RegisterView({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={t("namePlaceholder")}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl border-border bg-white"
                     required
                   />
                   <FieldError field="name" />
@@ -243,24 +239,24 @@ export default function RegisterView({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t("emailPlaceholder")}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl border-border bg-white"
                     required
                   />
                   <FieldError field="email" />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">{t("phone")}</Label>
+                  <Label htmlFor="whatsapp">{t("whatsapp")}</Label>
                   <Input
-                    id="phone"
+                    id="whatsapp"
                     type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder={t("phonePlaceholder")}
-                    className="h-12 rounded-xl"
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    placeholder={t("whatsappPlaceholder")}
+                    className="h-12 rounded-xl border-border bg-white"
                     required
                   />
-                  <FieldError field="phone" />
+                  <FieldError field="whatsapp" />
                 </div>
 
                 <div className="space-y-2">
@@ -272,7 +268,7 @@ export default function RegisterView({
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder={t("passwordPlaceholder")}
-                      className="h-12 rounded-xl pr-12"
+                      className="h-12 rounded-xl pr-12 border-border bg-white"
                       required
                     />
                     <button
@@ -304,7 +300,7 @@ export default function RegisterView({
                       value={passwordConfirmation}
                       onChange={(e) => setPasswordConfirmation(e.target.value)}
                       placeholder={t("confirmPasswordPlaceholder")}
-                      className="h-12 rounded-xl pr-12"
+                      className="h-12 rounded-xl pr-12 border-border bg-white"
                       required
                     />
                     <button
@@ -333,10 +329,10 @@ export default function RegisterView({
                         value={provinceId}
                         onValueChange={(val) => setProvinceId(val || "")}
                       >
-                        <SelectTrigger className="h-12 rounded-xl">
-                          <SelectValue
-                            placeholder={t("selectProvince")}
-                          />
+                        <SelectTrigger className="h-12 rounded-xl border-border bg-white w-full">
+                          <SelectValue placeholder={t("selectProvince")}>
+                            {provinceId ? initialProvinces.find(p => p.id.toString() === provinceId)?.name : null}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {initialProvinces.map((p) => (
@@ -359,10 +355,10 @@ export default function RegisterView({
                         onValueChange={(val) => setCityId(val || "")}
                         disabled={!provinceId}
                       >
-                        <SelectTrigger className="h-12 rounded-xl">
-                          <SelectValue
-                            placeholder={t("selectCity")}
-                          />
+                        <SelectTrigger className="h-12 rounded-xl border-border bg-white w-full">
+                          <SelectValue placeholder={t("selectCity")}>
+                            {cityId ? cities.find(c => c.id.toString() === cityId)?.name : null}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {cities.map((c) => (
@@ -379,17 +375,7 @@ export default function RegisterView({
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>{t("whatsapp")}</Label>
-                    <Input
-                      type="tel"
-                      value={whatsapp}
-                      onChange={(e) => setWhatsapp(e.target.value)}
-                      placeholder={t("whatsappPlaceholder")}
-                      className="h-12 rounded-xl"
-                    />
-                    <FieldError field="whatsapp" />
-                  </div>
+
 
                   <div className="space-y-2">
                     <Label>{t("categories")}</Label>
@@ -404,11 +390,10 @@ export default function RegisterView({
                             key={cat.id}
                             type="button"
                             onClick={() => toggleCategory(cat.id)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                              isSelected
-                                ? "bg-primary text-white border-primary"
-                                : "bg-white text-muted-foreground border-border hover:border-primary hover:text-primary"
-                            }`}
+                            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${isSelected
+                              ? "bg-primary text-white border-primary"
+                              : "bg-white text-muted-foreground border-border hover:border-primary hover:text-primary"
+                              }`}
                           >
                             {isSelected && (
                               <CheckCircle2 className="w-3 h-3 inline mr-1" />
@@ -421,16 +406,7 @@ export default function RegisterView({
                     <FieldError field="categories" />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>{t("bio")}</Label>
-                    <textarea
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                      placeholder={t("bioPlaceholder")}
-                      className="flex min-h-[100px] w-full rounded-xl border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
-                    />
-                    <FieldError field="bio" />
-                  </div>
+
                 </div>
               </TabsContent>
 

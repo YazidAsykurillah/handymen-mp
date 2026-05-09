@@ -23,14 +23,14 @@ class AuthController extends ApiController
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
-            'phone'    => 'required|string|max:20',
+            'whatsapp' => 'required|string|max:20|unique:users,phone',
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
-            'phone'    => $request->phone,
+            'phone'    => $request->whatsapp,
             'password' => Hash::make($request->password),
         ]);
 
@@ -52,21 +52,20 @@ class AuthController extends ApiController
         $request->validate([
             'name'        => 'required|string|max:255',
             'email'       => 'required|string|email|max:255|unique:users',
-            'phone'       => 'required|string|max:20',
+            'whatsapp'    => 'required|string|max:20|unique:users,phone',
             'password'    => ['required', 'confirmed', Password::defaults()],
             'province_id' => 'required|exists:provinces,id',
             'city_id'     => 'required|exists:cities,id',
             'categories'  => 'required|array',
             'categories.*'=> 'exists:categories,id',
-            'bio'         => 'required|string',
-            'whatsapp'    => 'required|string|max:20',
+            'bio'         => 'nullable|string',
         ]);
 
         return DB::transaction(function () use ($request) {
             $user = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
-                'phone'    => $request->phone,
+                'phone'    => $request->whatsapp,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -79,7 +78,7 @@ class AuthController extends ApiController
                 'province_id' => $request->province_id,
                 'city_id'     => $request->city_id,
                 'bio'         => $request->bio,
-                'phone'       => $request->phone,
+                'phone'       => $request->whatsapp,
                 'whatsapp'    => $request->whatsapp,
                 'is_verified' => false,
                 'is_premium'  => false,
@@ -152,11 +151,19 @@ class AuthController extends ApiController
         $user = $request->user();
 
         $request->validate([
-            'name'  => 'sometimes|string|max:255',
-            'phone' => 'sometimes|string|max:20',
+            'name'     => 'sometimes|string|max:255',
+            'whatsapp' => 'sometimes|string|max:20',
         ]);
 
-        $user->update($request->only('name', 'phone'));
+        if ($request->has('whatsapp')) {
+            $user->phone = $request->whatsapp;
+        }
+
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        $user->save();
 
         return $this->success(new UserResource($user), 'Profile updated successfully.');
     }
