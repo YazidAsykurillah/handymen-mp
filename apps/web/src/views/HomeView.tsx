@@ -95,7 +95,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
     <main className="flex-1 flex flex-col bg-background">
       {/* Hero Section */}
       <section className="pt-20 pb-24 flex flex-col items-center justify-center text-center px-6 md:px-16">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary max-w-4xl tracking-tight leading-tight mb-6">
+        <h1 className="text-4xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-primary max-w-4xl tracking-tight leading-tight mb-6">
           {t("title")}
         </h1>
         <p className="text-base text-muted-foreground max-w-2xl mb-12">
@@ -151,7 +151,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               variants={{
                 hidden: { opacity: 0 },
                 show: {
@@ -164,7 +164,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
             >
               {categories?.map((c) => (
                 <motion.div

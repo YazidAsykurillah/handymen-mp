@@ -501,7 +501,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                 <p className="text-muted-foreground font-medium italic">Finding experts for you...</p>
               </div>
             ) : handymen.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-8">
                 {handymen.map((h: Handyman) => (
                   <HandymanCard key={h.id} handyman={h} />
                 ))}
