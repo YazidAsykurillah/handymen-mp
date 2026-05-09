@@ -4,7 +4,7 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  optimizeFonts: false,
+  //optimizeFonts: false,
   allowedDevOrigins: ['handyman.local'],
   images: {
     remotePatterns: [
@@ -14,6 +14,7 @@ const nextConfig = {
       } as const,
     ],
   },
+  bundlePagesRouterDependencies: true,
 };
 
 export default withNextIntl(nextConfig);
