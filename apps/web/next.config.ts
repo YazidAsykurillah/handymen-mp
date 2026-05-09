@@ -4,7 +4,6 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Matikan optimasi font karena VPS tidak bisa akses Google Fonts
   optimizeFonts: false,
   allowedDevOrigins: ['handyman.local'],
   images: {
