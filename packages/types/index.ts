@@ -25,11 +25,21 @@ export interface Handyman {
   created_at: string;
 }
 
+export interface PortfolioImage {
+  id: number;
+  image_url: string;
+  caption: string | null;
+  is_thumbnail: boolean;
+  order: number;
+}
+
 export interface Portfolio {
   id: number;
-  handyman_id: number;
-  photo_url: string;
-  description?: string;
+  title: string;
+  description: string | null;
+  images: PortfolioImage[];
+  thumbnail: PortfolioImage | null;
+  order: number;
 }
 
 export interface ApiResponse<T> {

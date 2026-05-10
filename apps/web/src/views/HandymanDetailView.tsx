@@ -30,11 +30,20 @@ interface Category {
   slug: string;
 }
 
+interface PortfolioImage {
+  id: number;
+  image_url: string;
+  caption: string | null;
+  is_thumbnail: boolean;
+  order: number;
+}
+
 interface Portfolio {
   id: number;
-  photo_url: string;
-  caption: string | null;
-  order: number;
+  title: string;
+  description: string | null;
+  images: PortfolioImage[];
+  thumbnail: PortfolioImage | null;
 }
 
 interface Review {
