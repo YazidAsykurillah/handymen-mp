@@ -162,7 +162,6 @@ export default function Navbar() {
             /* Logged-out: Login & Register */
             <>
 
-
               <Link href="/auth/register" className="hidden sm:block">
                 <Button variant="ghost" className="text-muted-foreground hover:text-foreground font-semibold px-4 transition-all text-xs sm:text-sm whitespace-nowrap">
                   {t("register")}
@@ -219,10 +218,10 @@ export default function Navbar() {
                       </div>
                     </div>
                     <div className="flex-1 -mx-6">
-                      <DashboardSidebar 
-                        hideMobileHeader 
+                      <DashboardSidebar
+                        hideMobileHeader
                         hideBorder
-                        onLinkClick={handleLinkClick} 
+                        onLinkClick={handleLinkClick}
                       />
                     </div>
                   </>

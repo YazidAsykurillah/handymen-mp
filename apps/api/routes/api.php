@@ -45,9 +45,16 @@ Route::middleware(['auth:sanctum', 'role:handyman'])->prefix('handyman')->group(
     Route::put('/categories', [HandymanProfileController::class, 'syncCategories']);
 
     Route::prefix('portfolios')->group(function () {
+        Route::get('/', [PortfolioController::class, 'index']);
         Route::post('/', [PortfolioController::class, 'store']);
+        Route::put('/{id}', [PortfolioController::class, 'update']);
         Route::delete('/{id}', [PortfolioController::class, 'destroy']);
         Route::put('/reorder', [PortfolioController::class, 'reorder']);
+        
+        // Image management
+        Route::post('/{id}/images', [PortfolioController::class, 'addImages']);
+        Route::patch('/images/{imageId}/thumbnail', [PortfolioController::class, 'setThumbnail']);
+        Route::delete('/images/{imageId}', [PortfolioController::class, 'deleteImage']);
     });
 });
 

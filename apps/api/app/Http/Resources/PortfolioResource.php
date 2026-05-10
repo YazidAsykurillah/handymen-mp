@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\PortfolioImageResource;
 
 class PortfolioResource extends JsonResource
 {
@@ -16,10 +16,12 @@ class PortfolioResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'        => $this->id,
-            'photo_url' => $this->photo_url ? Storage::disk('public')->url($this->photo_url) : null,
-            'caption'   => $this->caption,
-            'order'     => $this->order,
+            'id'          => $this->id,
+            'title'       => $this->title,
+            'description' => $this->description,
+            'order'       => $this->order,
+            'images'      => PortfolioImageResource::collection($this->whenLoaded('images')),
+            'thumbnail'   => new PortfolioImageResource($this->whenLoaded('thumbnail')),
         ];
     }
 }

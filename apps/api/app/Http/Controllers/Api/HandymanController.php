@@ -74,7 +74,7 @@ class HandymanController extends ApiController
      */
     public function show(string $slug): JsonResponse
     {
-        $handyman = Handyman::with(['city', 'province', 'categories', 'portfolios'])
+        $handyman = Handyman::with(['city', 'province', 'categories', 'portfolios.images', 'portfolios.thumbnail'])
             ->where('slug', $slug)
             ->where('is_active', true)
             ->first();
@@ -117,7 +117,10 @@ class HandymanController extends ApiController
             return $this->error('Handyman not found.', 404);
         }
 
-        $portfolios = $handyman->portfolios()->orderBy('order')->get();
+        $portfolios = $handyman->portfolios()
+            ->with(['images', 'thumbnail'])
+            ->orderBy('order')
+            ->get();
 
         return $this->success(PortfolioResource::collection($portfolios));
     }
