@@ -60,6 +60,14 @@
     "premium": "Premium",
     "min_rating": "Rating Minimal"
   },
+  "projects": {
+    "title": "Portofolio Proyek",
+    "subtitle": "Temukan hasil kerja inspiratif dari komunitas tukang profesional kami.",
+    "explore": "Jelajahi Proyek",
+    "noProjects": "Tidak ada proyek yang ditemukan sesuai kriteria Anda.",
+    "viewProject": "Lihat Proyek",
+    "by": "oleh"
+  },
   "handyman": {
     "categories": "Kategori Tukang",
     "location": "Lokasi",

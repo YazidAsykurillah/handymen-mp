@@ -19,6 +19,7 @@ Route::get('/handymen', [HandymanController::class, 'index']);
 Route::get('/handymen/{slug}', [HandymanController::class, 'show']);
 Route::get('/handymen/{slug}/reviews', [HandymanController::class, 'reviews']);
 Route::get('/handymen/{slug}/portfolios', [HandymanController::class, 'portfolios']);
+Route::get('/portfolios', [PortfolioController::class, 'publicIndex']);
 
 // Auth
 Route::prefix('auth')->group(function () {

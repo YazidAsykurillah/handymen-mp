@@ -33,6 +33,44 @@ class PortfolioController extends ApiController
     }
 
     /**
+     * Publicly list all portfolios with pagination.
+     */
+    public function publicIndex(Request $request): JsonResponse
+    {
+        $query = Portfolio::with(['images', 'thumbnail', 'handyman.city', 'handyman.province']);
+
+        // Filter by category if provided via handyman
+        if ($request->filled('category')) {
+            $query->whereHas('handyman.categories', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Sorting
+        $sort = $request->get('sort', 'created_at');
+        $order = $request->get('order', 'desc');
+
+        $allowedSorts = ['created_at', 'title'];
+        if (in_array($sort, $allowedSorts)) {
+            $query->orderBy($sort, $order === 'asc' ? 'asc' : 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $perPage = $request->get('per_page', 12);
+        $portfolios = $query->paginate($perPage);
+
+        return $this->successPaginated(PortfolioResource::collection($portfolios));
+    }
+
+    /**
      * Create a new portfolio project with images.
      */
     public function store(Request $request): JsonResponse

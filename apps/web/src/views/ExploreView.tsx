@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { slugify, getIdFromSlug, getSlugFromId } from "@/lib/slug";
@@ -15,7 +15,9 @@ import {
   SlidersHorizontal,
   Loader2,
   MapPin,
-  CheckCircle2
+  CheckCircle2,
+  ChevronRight,
+  Home
 } from "lucide-react";
 import { apiClient } from "@/lib/api";
 import { HandymanCard } from "@/components/handymen/HandymanCard";
@@ -402,7 +404,21 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
-      <div className="container mx-auto px-6 md:px-16 pt-12 pb-24">
+      {/* Breadcrumbs */}
+      <div className="container mx-auto px-6 md:px-16 pt-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1">
+            <Home className="w-3.5 h-3.5" />
+            Home
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5" />
+          <span className="text-primary font-medium">
+            Explore
+          </span>
+        </nav>
+      </div>
+
+      <div className="container mx-auto px-6 md:px-16 pt-10 pb-24">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="max-w-2xl">

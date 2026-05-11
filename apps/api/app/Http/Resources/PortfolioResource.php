@@ -22,6 +22,8 @@ class PortfolioResource extends JsonResource
             'order'       => $this->order,
             'images'      => PortfolioImageResource::collection($this->whenLoaded('images')),
             'thumbnail'   => new PortfolioImageResource($this->whenLoaded('thumbnail')),
+            'handyman'    => new HandymanResource($this->whenLoaded('handyman')),
+            'created_at'  => $this->created_at,
         ];
     }
 }
