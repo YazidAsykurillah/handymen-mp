@@ -30,6 +30,23 @@ export function usePortfolios() {
   });
 }
 
+const getErrorMessage = (error: any) => {
+  const data = error.response?.data;
+  if (data?.errors) {
+    return Object.values(data.errors).flat()[0] as string;
+  }
+  if (data?.message) {
+    return data.message;
+  }
+  if (error.response?.status === 413) {
+    return "File size is too large for the server to process.";
+  }
+  if (error.message === "Network Error") {
+    return "Network error. The file might be too large for the connection.";
+  }
+  return error.message || "Action failed. Please try again.";
+};
+
 export function useCreatePortfolio() {
   const queryClient = useQueryClient();
   const t = useTranslations("dashboard.portfolio");
@@ -46,7 +63,7 @@ export function useCreatePortfolio() {
       toast.success(t("createSuccess"));
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Action failed");
+      toast.error(getErrorMessage(error));
     },
   });
 }
@@ -67,7 +84,7 @@ export function useAddPortfolioImages(portfolioId: number) {
       toast.success(t("updateSuccess"));
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Action failed");
+      toast.error(getErrorMessage(error));
     },
   });
 }
@@ -85,7 +102,7 @@ export function useSetThumbnail() {
       toast.success(t("thumbnailSuccess"));
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Action failed");
+      toast.error(getErrorMessage(error));
     },
   });
 }
@@ -103,7 +120,7 @@ export function useDeletePortfolioImage() {
       toast.success(t("imageDeleteSuccess"));
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Action failed");
+      toast.error(getErrorMessage(error));
     },
   });
 }
@@ -118,6 +135,9 @@ export function useUpdatePortfolio(id: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["portfolios"] });
       toast.success("Project updated successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(getErrorMessage(error));
     },
   });
 }
@@ -135,7 +155,7 @@ export function useDeletePortfolio() {
       toast.success(t("deleteSuccess"));
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Action failed");
+      toast.error(getErrorMessage(error));
     },
   });
 }

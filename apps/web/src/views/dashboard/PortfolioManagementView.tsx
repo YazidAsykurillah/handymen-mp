@@ -3,11 +3,19 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePortfolios, useDeletePortfolio, Portfolio } from "@/hooks/usePortfolios";
-import { Button } from "@/components/ui/button";
-import { Plus, Images, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Plus, Images, Loader2, AlertTriangle, Trash2 } from "lucide-react";
 import PortfolioProjectCard from "@/components/dashboard/portfolio/PortfolioProjectCard";
 import CreateProjectModal from "@/components/dashboard/portfolio/CreateProjectModal";
 import ProjectDetailsModal from "@/components/dashboard/portfolio/ProjectDetailsModal";
+import { Button } from "@/components/ui/button";
 import PermissionGuard from "@/components/auth/PermissionGuard";
 
 export default function PortfolioManagementView() {
@@ -19,6 +27,9 @@ export default function PortfolioManagementView() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<number | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   const selectedPortfolio = portfolios?.find(p => p.id === selectedPortfolioId) || null;
 
@@ -28,8 +39,18 @@ export default function PortfolioManagementView() {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm(pt("deleteProject") + "?")) {
-      deletePortfolio.mutate(id);
+    setDeleteTargetId(id);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (deleteTargetId) {
+      deletePortfolio.mutate(deleteTargetId, {
+        onSettled: () => {
+          setIsDeleteConfirmOpen(false);
+          setDeleteTargetId(null);
+        }
+      });
     }
   };
 
@@ -100,6 +121,44 @@ export default function PortfolioManagementView() {
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
       />
+
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent className="sm:max-w-[400px] rounded-3xl p-6">
+          <DialogHeader className="flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+              <AlertTriangle className="w-6 h-6 text-destructive" />
+            </div>
+            <DialogTitle className="text-xl font-heading font-bold">
+              {pt("deleteProject")}?
+            </DialogTitle>
+            <DialogDescription className="mt-2">
+              This action cannot be undone. This will permanently delete the project and all its images.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-6">
+            <Button
+              variant="ghost"
+              onClick={() => setIsDeleteConfirmOpen(false)}
+              className="rounded-xl flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deletePortfolio.isPending}
+              className="rounded-xl flex-1 shadow-lg shadow-destructive/20"
+            >
+              {deletePortfolio.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                <Trash2 className="w-4 h-4 mr-2" />
+              )}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

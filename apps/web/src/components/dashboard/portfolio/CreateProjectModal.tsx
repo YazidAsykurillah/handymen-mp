@@ -35,6 +35,14 @@ export default function CreateProjectModal({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
+    
+    // Max 5MB per file
+    const tooLarge = selectedFiles.some(file => file.size > 5 * 1024 * 1024);
+    if (tooLarge) {
+      toast.error("Images must be smaller than 5MB");
+      return;
+    }
+
     if (files.length + selectedFiles.length > 8) {
       toast.error(t("maxImages"));
       return;
