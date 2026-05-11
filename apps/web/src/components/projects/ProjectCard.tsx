@@ -61,7 +61,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-            <button 
+            <button
               onClick={() => setIsModalOpen(true)}
               className="w-full bg-white/20 backdrop-blur-md border border-white/30 text-white py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-white hover:text-primary transition-all active:scale-95"
             >
@@ -69,7 +69,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               {t("viewProject")}
             </button>
           </div>
-          
+
           <div className="absolute top-4 right-4">
             <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm text-primary font-bold rounded-full px-3 py-1 border-none shadow-sm flex items-center gap-1.5">
               <Images className="w-3.5 h-3.5" />
@@ -79,10 +79,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         <div className="p-4 sm:p-6 flex-1 flex flex-col">
-          <h3 className="font-heading font-bold text-lg sm:text-xl text-primary mb-2 sm:mb-3 line-clamp-1 group-hover:text-secondary transition-colors">
+          <h4 className="font-heading font-bold text-base sm:text-sm text-primary mb-2">
             {project.title}
-          </h3>
-          
+          </h4>
+
           <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-4 sm:mb-6 flex-1">
             {project.description || "Project showcase by " + handymanName}
           </p>
@@ -116,7 +116,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </Card>
 
-      <PublicProjectDetailsModal 
+      <PublicProjectDetailsModal
         project={project}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}

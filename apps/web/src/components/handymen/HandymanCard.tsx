@@ -66,13 +66,16 @@ export function HandymanCard({ handyman }: HandymanCardProps) {
                 <CheckCircle2 className="w-4 h-4 text-blue-500" />
               )}
             </div>
-            <h4 className="font-heading font-bold text-lg sm:text-xl text-primary mb-2 truncate">
+            <h4 className="font-heading font-bold text-base sm:text-sm text-primary mb-2 truncate">
               {handyman.name}
             </h4>
             {handyman.province?.name && handyman.city?.name && (
               <p className="text-muted-foreground text-[13px] flex items-start gap-1 mb-4 leading-tight">
                 <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-secondary" />
-                <span>{handyman.province.name} - {handyman.city.name}</span>
+                <span>
+                  <span className="hidden sm:inline">{handyman.province.name} - </span>
+                  {handyman.city.name}
+                </span>
               </p>
             )}
             <div className="flex flex-wrap gap-2 mt-auto">

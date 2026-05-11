@@ -52,7 +52,7 @@ export function TopRatedHandymen({ initialHandymen }: TopRatedHandymenProps) {
         <div className="flex items-center justify-between mb-10 gap-4">
           <div className="max-w-[70%] sm:max-w-2xl">
             <h2 className="text-2xl sm:text-4xl font-heading font-bold text-primary mb-1 sm:mb-4">{tr("title")}</h2>
-            <p className="text-muted-foreground text-xs sm:text-base line-clamp-1 sm:line-clamp-none">
+            <p className="text-muted-foreground text-base sm:text-xs line-clamp-1 sm:line-clamp-none">
               {tr("subtitle")}
             </p>
           </div>

@@ -217,7 +217,7 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
               <h3 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-white mb-4 leading-tight">
                 Precision Installation
               </h3>
-              <p className="text-white/80 text-base sm:text-lg md:text-base leading-relaxed">
+              <p className="text-white/80 text-sm sm:text-sm md:text-base leading-relaxed">
                 Experience the difference of white-glove service for your next home upgrade.
               </p>
             </div>
