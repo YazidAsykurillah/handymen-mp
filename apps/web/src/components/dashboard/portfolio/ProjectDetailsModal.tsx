@@ -11,12 +11,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus, Trash2, Star, CheckCircle2, Pencil, X, Save } from "lucide-react";
+import { Loader2, Plus, Trash2, Star, CheckCircle2, Pencil, X, Save, MoreVertical } from "lucide-react";
 import { toast } from "sonner";
 import { useUpdatePortfolio } from "@/hooks/usePortfolios";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ProjectDetailsModalProps {
   portfolio: Portfolio | null;
@@ -176,30 +182,43 @@ export default function ProjectDetailsModal({
                   alt="Portfolio"
                 />
 
-                {/* Actions Overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2 p-2">
-                  {!img.is_thumbnail && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="h-7 w-full text-[10px] rounded-lg"
-                      onClick={() => setThumbnail.mutate(img.id)}
-                      disabled={setThumbnail.isPending}
-                    >
-                      <Star className="w-3 h-3 mr-1" />
-                      Make Thumbnail
-                    </Button>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="h-7 w-full text-[10px] rounded-lg"
-                    onClick={() => deleteImage.mutate(img.id)}
-                    disabled={deleteImage.isPending}
-                  >
-                    <Trash2 className="w-3 h-3 mr-1" />
-                    Delete
-                  </Button>
+                {/* Image Actions Dropdown */}
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        size="icon" 
+                        variant="secondary" 
+                        className="h-7 w-7 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:bg-white border-none"
+                      >
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="rounded-xl min-w-[140px]">
+                      {!img.is_thumbnail && (
+                        <DropdownMenuItem 
+                          onClick={() => setThumbnail.mutate(img.id)}
+                          disabled={setThumbnail.isPending}
+                          className="cursor-pointer"
+                        >
+                          <Star className="w-4 h-4 mr-2 text-yellow-500 fill-yellow-500" />
+                          Set Thumbnail
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem 
+                        onClick={() => {
+                          if (confirm(t("deleteImage") + "?")) {
+                            deleteImage.mutate(img.id);
+                          }
+                        }}
+                        disabled={deleteImage.isPending}
+                        className="text-destructive focus:text-destructive cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Image
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 {/* Badge if thumbnail */}
