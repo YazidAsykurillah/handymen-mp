@@ -23,9 +23,9 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Legal */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h4 className="font-semibold text-sm text-foreground uppercase tracking-wider">Legal</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-0">
               <li>
                 <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider text-xs">
                   Privacy Policy
@@ -40,9 +40,9 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Trust */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h4 className="font-semibold text-sm text-foreground uppercase tracking-wider">Trust</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-0">
               <li>
                 <Link href="/trust" className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider text-xs">
                   Insurance & Guarantee
@@ -52,9 +52,9 @@ export default function Footer() {
           </div>
 
           {/* Column 4: Partners */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <h4 className="font-semibold text-sm text-foreground uppercase tracking-wider">Partners</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-0">
               <li>
                 <Link href="/become-a-pro" className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider text-xs">
                   Become a Pro
