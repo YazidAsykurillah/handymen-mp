@@ -54,7 +54,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       className="h-full"
     >
       <Card className="group overflow-hidden rounded-[2rem] border border-border bg-white shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col p-0 border-none">
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative aspect-[4/3] sm:aspect-video overflow-hidden">
           <img
             src={thumbnailSrc}
             alt={project.title}
@@ -78,8 +78,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 flex-1 flex flex-col">
-          <h4 className="font-heading font-bold text-base sm:text-sm text-primary mb-2">
+        <div className="p-4 pt-3 sm:p-6 sm:pt-5 flex-1 flex flex-col">
+          <h4 className="font-heading font-bold text-md sm:text-lg text-primary mb-2">
             {project.title}
           </h4>
 
@@ -101,13 +101,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 )}
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-muted-foreground font-medium uppercase leading-none mb-0.5 sm:mb-1">oleh</span>
-                <span className="text-xs sm:text-sm font-bold text-primary line-clamp-1">{handymanName}</span>
+                <span className="text-[10px] text-muted-foreground font-medium leading-none mb-0.5 sm:mb-1">Completed By</span>
+                <span className="text-xs sm:text-sm font-bold text-primary">{handymanName}</span>
               </div>
             </div>
 
             <div className="hidden sm:flex flex-col items-end">
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground font-bold uppercase">
+              <div className="flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground font-bold">
                 <MapPin className="w-2.5 h-2.5 sm:w-3 h-3" />
                 {project.handyman?.city?.name || "Multiple"}
               </div>

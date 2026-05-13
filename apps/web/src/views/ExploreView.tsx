@@ -99,9 +99,9 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const [isVerified, setIsVerified] = useState<string>(searchParams.get("is_verified") || "all");
   const [isPremium, setIsPremium] = useState<string>(searchParams.get("is_premium") || "all");
   const [minRating, setMinRating] = useState<string>(searchParams.get("rating_min") || "all");
-  
+
   // Initialize provinceId from province slug in URL
-  const initialProvinceId = searchParams.get("province") 
+  const initialProvinceId = searchParams.get("province")
     ? getIdFromSlug(initialProvinces, searchParams.get("province"))
     : (searchParams.get("province_id") || "all");
 
@@ -205,19 +205,19 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     if (isVerified !== "all") params.append("is_verified", isVerified);
     if (isPremium !== "all") params.append("is_premium", isPremium);
     if (minRating !== "all") params.append("rating_min", minRating);
-    
+
     if (provinceId !== "all") {
       const slug = getSlugFromId(initialProvinces, provinceId);
       if (slug) params.append("province", slug);
       else params.append("province_id", provinceId);
     }
-    
+
     if (cityId !== "all") {
       const slug = getSlugFromId(cities, cityId);
       if (slug) params.append("city", slug);
       else params.append("city_id", cityId);
     }
-    
+
     if (districtId !== "all") params.append("district_id", districtId);
 
     const queryString = params.toString();
@@ -413,7 +413,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-primary font-medium">
-            Explore
+            {et("search_title")}
           </span>
         </nav>
       </div>

@@ -5,11 +5,11 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  Search, 
-  Filter, 
-  Loader2, 
-  LayoutGrid, 
+import {
+  Search,
+  Filter,
+  Loader2,
+  LayoutGrid,
   Sparkles,
   ChevronRight,
   Home
@@ -81,7 +81,7 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
     if (category !== "all") params.append("category", category);
     if (sortBy) params.append("sort", sortBy);
     if (order) params.append("order", order);
-    
+
     const queryString = params.toString();
     const url = queryString ? `/projects?${queryString}` : "/projects";
     router.replace(url, { scroll: false });
@@ -267,7 +267,7 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
                 <p className="text-muted-foreground font-medium italic">Curating best projects for you...</p>
               </div>
             ) : projects.length > 0 ? (
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-8">
+              <div className="grid grid-cols-2 xl:grid-cols-2 gap-3 sm:gap-8">
                 {projects.map((project: any) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}

@@ -3,8 +3,9 @@ import { getTranslations } from "next-intl/server";
 import ProjectsView from "../../../views/ProjectsView";
 import { apiClient } from "@/lib/api";
 
-export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: "projects" });
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "projects" });
   return {
     title: `${t("title")} | ${process.env.NEXT_PUBLIC_APP_NAME || "Handyman"}`,
     description: t("subtitle"),
