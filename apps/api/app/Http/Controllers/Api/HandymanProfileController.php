@@ -6,6 +6,9 @@ use App\Http\Resources\HandymanResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
 
 class HandymanProfileController extends ApiController
 {
@@ -26,6 +29,51 @@ class HandymanProfileController extends ApiController
     }
 
     /**
+     * Get dashboard statistics for the authenticated handyman.
+     */
+    public function stats(Request $request): JsonResponse
+    {
+        $handyman = $request->user()->handyman;
+
+        if (!$handyman) {
+            return $this->error('Handyman profile not found.', 404);
+        }
+
+        $stats = [
+            'portfolio_count' => $handyman->portfolios()->count(),
+            'review_count'    => $handyman->reviews()->count(),
+            'rating_avg'      => (float) $handyman->rating_avg,
+            'is_verified'     => $handyman->is_verified,
+            'profile_completeness' => $this->calculateCompleteness($handyman),
+        ];
+
+        return $this->success($stats);
+    }
+
+    /**
+     * Calculate profile completeness percentage.
+     */
+    private function calculateCompleteness($handyman): int
+    {
+        $fields = [
+            'bio', 'province_id', 'city_id', 'address', 'photo_profile'
+        ];
+        
+        $completed = 0;
+        foreach ($fields as $field) {
+            if (!empty($handyman->$field)) {
+                $completed++;
+            }
+        }
+        
+        if ($handyman->categories()->exists()) {
+            $completed++;
+        }
+        
+        return round(($completed / (count($fields) + 1)) * 100);
+    }
+
+    /**
      * Update the authenticated handyman's profile.
      */
     public function update(Request $request): JsonResponse
@@ -36,10 +84,19 @@ class HandymanProfileController extends ApiController
             return $this->error('Handyman profile not found.', 404);
         }
 
+        if ($request->has('whatsapp')) {
+            $request->merge(['whatsapp' => preg_replace('/\s+/', '', $request->whatsapp)]);
+        }
+
         $request->validate([
             'name'        => 'sometimes|string|max:255',
             'bio'         => 'sometimes|string',
-            'whatsapp'    => 'sometimes|string|max:20',
+            'whatsapp'    => [
+                'sometimes',
+                'string',
+                'max:20',
+                Rule::unique('users', 'phone')->ignore($request->user()->id),
+            ],
             'address'     => 'sometimes|string|max:255',
             'latitude'    => 'sometimes|numeric',
             'longitude'   => 'sometimes|numeric',
@@ -48,14 +105,21 @@ class HandymanProfileController extends ApiController
             'district_id' => 'sometimes|exists:districts,id',
         ]);
 
-        $data = $request->all();
-        if ($request->has('whatsapp')) {
-            $data['phone'] = $request->whatsapp;
-        }
+        return DB::transaction(function () use ($request, $handyman) {
+            $data = $request->all();
+            if ($request->has('whatsapp')) {
+                $whatsapp = $request->whatsapp;
+                $data['phone'] = $whatsapp;
+                
+                $user = $request->user();
+                $user->phone = $whatsapp;
+                $user->save();
+            }
 
-        $handyman->update($data);
+            $handyman->update($data);
 
-        return $this->success(new HandymanResource($handyman), 'Profile updated successfully.');
+            return $this->success(new HandymanResource($handyman), 'Profile updated successfully.');
+        });
     }
 
     /**

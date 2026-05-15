@@ -40,6 +40,7 @@ Route::prefix('auth')->group(function () {
 // Handyman Management
 Route::middleware(['auth:sanctum', 'role:handyman'])->prefix('handyman')->group(function () {
     Route::get('/profile', [HandymanProfileController::class, 'show']);
+    Route::get('/stats', [HandymanProfileController::class, 'stats']);
     Route::put('/profile', [HandymanProfileController::class, 'update']);
     Route::post('/profile/photo', [HandymanProfileController::class, 'uploadPhoto']);
     Route::delete('/profile/photo', [HandymanProfileController::class, 'deletePhoto']);

@@ -61,6 +61,7 @@ export default function ProfileSettingsView({
   const dt = useTranslations("dashboard");
   const ct = useTranslations("categories");
   const user = useAuthStore((s) => s.user);
+  const setAuth = useAuthStore((s) => s.setAuth);
 
   // Handyman Form State
   const [hmName, setHmName] = useState("");
@@ -145,6 +146,11 @@ export default function ProfileSettingsView({
       await apiClient.put("/handyman/categories", {
         categories: selectedCategories,
       });
+
+      // Sync auth store
+      if (user) {
+        setAuth({ ...user, phone: hmWhatsapp }, useAuthStore.getState().token!);
+      }
 
       toast.success("Professional profile updated.");
     } catch (error: any) {

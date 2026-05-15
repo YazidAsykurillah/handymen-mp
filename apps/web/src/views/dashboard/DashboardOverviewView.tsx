@@ -3,20 +3,40 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/auth.store";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api";
 import PermissionGuard from "@/components/auth/PermissionGuard";
-import { 
-  Compass, 
-  Star, 
-  CheckCircle2, 
+import {
+  Compass,
+  Star,
+  CheckCircle2,
   Images,
   TrendingUp,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface HandymanStats {
+  portfolio_count: number;
+  review_count: number;
+  rating_avg: number;
+  is_verified: boolean;
+  profile_completeness: number;
+}
 
 export default function DashboardOverviewView() {
   const t = useTranslations("dashboard");
   const user = useAuthStore((s) => s.user);
+
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["handyman-stats"],
+    queryFn: async () => {
+      const res = await apiClient.get("/handyman/stats");
+      return res.data.data as HandymanStats;
+    },
+    enabled: !!user?.roles?.includes("handyman"),
+  });
 
   if (!user) return null;
 
@@ -78,38 +98,50 @@ export default function DashboardOverviewView() {
         ========================================================
       */}
       <PermissionGuard role="handyman">
-        <div className="grid gap-6 sm:grid-cols-3 mb-8">
-          <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-border/40">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-muted-foreground">{t("profileCompleteness")}</h3>
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
-            </div>
-            <div className="text-3xl font-heading font-bold text-primary mb-2">85%</div>
-            <Link href="/dashboard/profile" className="text-sm text-secondary hover:underline font-medium flex items-center">
-              {t("completeProfile")} <ArrowRight className="w-3 h-3 ml-1" />
-            </Link>
+        {isLoading ? (
+          <div className="flex justify-center p-12">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-3 mb-8">
+            <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-border/40">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-muted-foreground">{t("profileCompleteness")}</h3>
+                <CheckCircle2 className={`w-5 h-5 ${stats?.profile_completeness === 100 ? 'text-green-500' : 'text-amber-500'}`} />
+              </div>
+              <div className="text-3xl font-heading font-bold text-primary mb-2">
+                {stats?.profile_completeness || 0}%
+              </div>
+              <Link href="/dashboard/profile" className="text-sm text-secondary hover:underline font-medium flex items-center">
+                {t("completeProfile")} <ArrowRight className="w-3 h-3 ml-1" />
+              </Link>
+            </div>
 
-          <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-border/40">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-muted-foreground">{t("portfolioCount")}</h3>
-              <Images className="w-5 h-5 text-blue-500" />
+            <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-border/40">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-muted-foreground">{t("portfolioCount")}</h3>
+                <Images className="w-5 h-5 text-blue-500" />
+              </div>
+              <div className="text-3xl font-heading font-bold text-primary mb-2">
+                {stats?.portfolio_count || 0}
+              </div>
+              <Link href="/dashboard/portfolios" className="text-sm text-secondary hover:underline font-medium flex items-center">
+                {t("addPortfolio")} <ArrowRight className="w-3 h-3 ml-1" />
+              </Link>
             </div>
-            <div className="text-3xl font-heading font-bold text-primary mb-2">0</div>
-            <Link href="/dashboard/portfolios" className="text-sm text-secondary hover:underline font-medium flex items-center">
-              {t("addPortfolio")} <ArrowRight className="w-3 h-3 ml-1" />
-            </Link>
-          </div>
 
-          <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-border/40">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-muted-foreground">Profile Views</h3>
-              <TrendingUp className="w-5 h-5 text-amber-500" />
+            <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-sm border border-border/40">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-muted-foreground">Rating Average</h3>
+                <Star className="w-5 h-5 text-primary" />
+              </div>
+              <div className="text-3xl font-heading font-bold text-primary mb-2">
+                {stats?.rating_avg || 0}
+              </div>
+              <p className="text-sm text-muted-foreground">Based on {stats?.review_count || 0} reviews</p>
             </div>
-            <div className="text-3xl font-heading font-bold text-primary mb-2">0</div>
-            <p className="text-sm text-muted-foreground">In the last 7 days</p>
           </div>
-        </div>
+        )}
 
         <div className="bg-white dark:bg-card rounded-2xl shadow-sm border border-border/40 overflow-hidden">
           <div className="p-6 border-b border-border/40 flex items-center justify-between">

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rule;
+
 
 class AuthController extends ApiController
 {
@@ -20,10 +22,14 @@ class AuthController extends ApiController
      */
     public function register(Request $request): JsonResponse
     {
+        if ($request->has('whatsapp')) {
+            $request->merge(['whatsapp' => preg_replace('/\s+/', '', $request->whatsapp)]);
+        }
+
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
-            'whatsapp' => 'required|string|max:20|unique:users,phone',
+            'whatsapp' => ['required', 'string', 'max:20', Rule::unique('users', 'phone')],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
@@ -49,10 +55,14 @@ class AuthController extends ApiController
      */
     public function registerHandyman(Request $request): JsonResponse
     {
+        if ($request->has('whatsapp')) {
+            $request->merge(['whatsapp' => preg_replace('/\s+/', '', $request->whatsapp)]);
+        }
+
         $request->validate([
             'name'        => 'required|string|max:255',
             'email'       => 'required|string|email|max:255|unique:users',
-            'whatsapp'    => 'required|string|max:20|unique:users,phone',
+            'whatsapp'    => ['required', 'string', 'max:20', Rule::unique('users', 'phone')],
             'password'    => ['required', 'confirmed', Password::defaults()],
             'province_id' => 'required|exists:provinces,id',
             'city_id'     => 'required|exists:cities,id',
@@ -150,22 +160,40 @@ class AuthController extends ApiController
     {
         $user = $request->user();
 
+        if ($request->has('whatsapp')) {
+            $request->merge(['whatsapp' => preg_replace('/\s+/', '', $request->whatsapp)]);
+        }
+
         $request->validate([
             'name'     => 'sometimes|string|max:255',
-            'whatsapp' => 'sometimes|string|max:20',
+            'whatsapp' => [
+                'sometimes',
+                'string',
+                'max:20',
+                Rule::unique('users', 'phone')->ignore($user->id),
+            ],
         ]);
 
-        if ($request->has('whatsapp')) {
-            $user->phone = $request->whatsapp;
-        }
+        return DB::transaction(function () use ($request, $user) {
+            if ($request->has('whatsapp')) {
+                $user->phone = $request->whatsapp;
 
-        if ($request->has('name')) {
-            $user->name = $request->name;
-        }
+                if ($user->handyman) {
+                    $user->handyman->update([
+                        'phone'    => $request->whatsapp,
+                        'whatsapp' => $request->whatsapp,
+                    ]);
+                }
+            }
 
-        $user->save();
+            if ($request->has('name')) {
+                $user->name = $request->name;
+            }
 
-        return $this->success(new UserResource($user), 'Profile updated successfully.');
+            $user->save();
+
+            return $this->success(new UserResource($user), 'Profile updated successfully.');
+        });
     }
 
     /**

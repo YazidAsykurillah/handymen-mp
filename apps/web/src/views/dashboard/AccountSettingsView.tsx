@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/auth.store";
 import { apiClient } from "@/lib/api";
@@ -17,9 +17,16 @@ export default function AccountSettingsView() {
   const setAuth = useAuthStore((s) => s.setAuth);
 
   // User Form State
-  const [name, setName] = useState(user?.name || "");
-  const [whatsapp, setWhatsapp] = useState(user?.phone || "");
+  const [name, setName] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [isUpdatingUser, setIsUpdatingUser] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || "");
+      setWhatsapp(user.phone || "");
+    }
+  }, [user]);
 
   // Password Form State
   const [currentPassword, setCurrentPassword] = useState("");
