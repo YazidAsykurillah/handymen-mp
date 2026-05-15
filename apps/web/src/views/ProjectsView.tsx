@@ -163,7 +163,7 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-primary font-medium">
-            {t("explore")}
+            {t("title")}
           </span>
         </nav>
       </div>

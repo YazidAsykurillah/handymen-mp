@@ -94,8 +94,8 @@ export default function HomeView({ initialCategories, initialHandymen }: HomeVie
   return (
     <main className="flex-1 flex flex-col bg-background">
       {/* Hero Section */}
-      <section className="pt-20 pb-24 flex flex-col items-center justify-center text-center px-6 md:px-16">
-        <h1 className="text-4xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-primary max-w-4xl tracking-tight leading-tight mb-6">
+      <section className="pt-14 pb-20 flex flex-col items-center justify-center text-center px-6 md:px-16">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-primary max-w-4xl tracking-tight leading-tight mb-6">
           {t("title")}
         </h1>
         <p className="text-base text-muted-foreground max-w-2xl mb-12">

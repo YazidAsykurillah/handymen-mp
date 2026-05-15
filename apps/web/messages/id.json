@@ -23,8 +23,8 @@
   },
   "nav": {
     "findHandyman": "Cari Tukang",
-    "explore": "Jelajahi",
-    "projects": "Proyek",
+    "explore": "Direktori Tukang",
+    "projects": "Direktori Proyek",
     "login": "Login",
     "signIn": "Login",
     "register": "Daftar",
@@ -47,7 +47,7 @@
     }
   },
   "explore": {
-    "search_title": "Pencarian Tukang",
+    "search_title": "Direktori Tukang",
     "search_subtitle": "Temukan tukang profesional dan terpercaya untuk konstruksi, renovasi, dan pekerjaan lainnya.",
     "all_categories": "Semua Kategori",
     "showing": "Menampilkan",
@@ -61,7 +61,7 @@
     "min_rating": "Rating Minimal"
   },
   "projects": {
-    "title": "Portofolio Proyek",
+    "title": "Direktori Proyek",
     "subtitle": "Temukan hasil kerja inspiratif dari komunitas tukang profesional kami.",
     "explore": "Jelajahi Proyek",
     "noProjects": "Tidak ada proyek yang ditemukan sesuai kriteria Anda.",

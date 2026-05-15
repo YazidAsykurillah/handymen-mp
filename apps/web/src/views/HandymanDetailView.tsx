@@ -81,6 +81,7 @@ interface HandymanDetailViewProps {
 export default function HandymanDetailView({ initialData, slug }: HandymanDetailViewProps) {
   const t = useTranslations("handyman");
   const ct = useTranslations("categories");
+  const et = useTranslations("explore");
   const [reviewPage, setReviewPage] = useState(1);
 
   // Fetch handyman profile (only if SSR didn't provide data)
@@ -172,7 +173,7 @@ export default function HandymanDetailView({ initialData, slug }: HandymanDetail
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <Link href="/explore" className="hover:text-primary transition-colors">
-            Explore
+            {et("search_title")}
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-primary font-medium truncate max-w-[200px]">
