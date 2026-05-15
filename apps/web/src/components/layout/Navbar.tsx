@@ -194,13 +194,13 @@ export default function Navbar() {
                   </Link>
                 </SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-6 mt-12 px-6">
+              <nav className="flex flex-col gap-4 mt-8 px-6">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={handleLinkClick}
-                    className="text-xl font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm font-heading font-semibold text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
