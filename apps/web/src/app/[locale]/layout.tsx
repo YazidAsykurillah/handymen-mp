@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
 import { getMessages } from "next-intl/server";
 import { Providers } from "@/components/providers/Providers";
 import Navbar from "@/components/layout/Navbar";
@@ -7,15 +6,8 @@ import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-});
+const fontSans = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif';
+const fontHeading = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
 export async function generateMetadata({
   params,
@@ -47,9 +39,15 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${outfit.variable} h-full antialiased`}
+      className="h-full antialiased"
+      style={{ 
+        // @ts-ignore
+        '--font-inter': fontSans,
+        // @ts-ignore
+        '--font-outfit': fontHeading 
+      } as React.CSSProperties}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <Providers locale={locale} messages={messages}>
           <Navbar />
           <div className="flex-1 flex flex-col relative min-h-0">
