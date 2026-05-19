@@ -108,6 +108,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
   const [provinceId, setProvinceId] = useState<string>(initialProvinceId);
   const [cityId, setCityId] = useState<string>(searchParams.get("city_id") || "all");
   const [districtId, setDistrictId] = useState<string>(searchParams.get("district_id") || "all");
+  const [page, setPage] = useState<number>(() => Number(searchParams.get("page")) || 1);
 
   // Query for Cities based on Province
   const { data: citiesData } = useQuery({
@@ -171,7 +172,10 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
     const dist = searchParams.get("district_id") || "all";
     if (dist !== districtId) setDistrictId(dist);
-  }, [searchParams, isMounted, search, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, initialProvinces]);
+
+    const pg = Number(searchParams.get("page")) || 1;
+    if (pg !== page) setPage(pg);
+  }, [searchParams, isMounted, search, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, initialProvinces, page]);
 
   // Sync city slug from URL once cities are loaded
   useEffect(() => {
@@ -187,11 +191,13 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
   // Debounce search input
   useEffect(() => {
+    if (!isMounted) return;
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
+      setPage(1);
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, isMounted]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -219,6 +225,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     }
 
     if (districtId !== "all") params.append("district_id", districtId);
+    if (page > 1) params.append("page", page.toString());
 
     const queryString = params.toString();
     if (queryString === lastUrlParamsRef.current) return;
@@ -227,11 +234,11 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     const url = queryString ? `/explore?${queryString}` : "/explore";
 
     router.replace(url, { scroll: false });
-  }, [debouncedSearch, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, isMounted, router]);
+  }, [debouncedSearch, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, page, isMounted, router, initialProvinces, cities]);
 
   // Query for Handymen
   const { data: handymenData, isLoading, isFetching } = useQuery({
-    queryKey: ["handymen", debouncedSearch, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId],
+    queryKey: ["handymen", debouncedSearch, category, sortBy, order, isVerified, isPremium, minRating, provinceId, cityId, districtId, page],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (debouncedSearch) params.append("search", debouncedSearch);
@@ -244,6 +251,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
       if (provinceId !== "all") params.append("province_id", provinceId);
       if (cityId !== "all") params.append("city_id", cityId);
       if (districtId !== "all") params.append("district_id", districtId);
+      params.append("page", page.toString());
       params.append("per_page", "12");
 
       const response = await apiClient.get(`/handymen?${params.toString()}`);
@@ -264,6 +272,13 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
     setMinRating("all");
     setProvinceId("all");
     setCityId("all");
+    setDistrictId("all");
+    setPage(1);
+  };
+
+  const handleFilterChange = (updater: () => void) => {
+    updater();
+    setPage(1);
   };
 
   const FilterSidebar = () => (
@@ -273,10 +288,10 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">{t("province")}</label>
-            <Select value={provinceId} onValueChange={(val) => {
+            <Select value={provinceId} onValueChange={(val) => handleFilterChange(() => {
               setProvinceId(val || "all");
               setCityId("all");
-            }}>
+            })}>
               <SelectTrigger className="w-full rounded-xl border-border bg-white h-12">
                 <SelectValue>
                   {provinceId === "all" ? "All Provinces" : initialProvinces.find(p => p.id.toString() === provinceId)?.name}
@@ -295,7 +310,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
             <label className="text-sm font-medium text-muted-foreground">{t("city")}</label>
             <Select
               value={cityId}
-              onValueChange={(val) => setCityId(val || "all")}
+              onValueChange={(val) => handleFilterChange(() => setCityId(val || "all"))}
               disabled={provinceId === "all"}
             >
               <SelectTrigger className="w-full rounded-xl border-border bg-white h-12">
@@ -324,7 +339,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
           <Button
             variant={category === "all" ? "secondary" : "ghost"}
             className="justify-start rounded-xl font-medium"
-            onClick={() => setCategory("all")}
+            onClick={() => handleFilterChange(() => setCategory("all"))}
           >
             {ct("all")}
           </Button>
@@ -333,7 +348,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
               key={cat.id}
               variant={category === cat.slug ? "secondary" : "ghost"}
               className="justify-start rounded-xl font-medium text-muted-foreground hover:text-primary"
-              onClick={() => setCategory(cat.slug)}
+              onClick={() => handleFilterChange(() => setCategory(cat.slug))}
             >
               {ct(cat.slug)}
             </Button>
@@ -348,7 +363,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">Verified Only</label>
-            <Select value={isVerified} onValueChange={(val) => setIsVerified(val || "all")}>
+            <Select value={isVerified} onValueChange={(val) => handleFilterChange(() => setIsVerified(val || "all"))}>
               <SelectTrigger className="w-full rounded-xl border-border bg-white h-12">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
@@ -362,7 +377,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">Premium Status</label>
-            <Select value={isPremium} onValueChange={(val) => setIsPremium(val || "all")}>
+            <Select value={isPremium} onValueChange={(val) => handleFilterChange(() => setIsPremium(val || "all"))}>
               <SelectTrigger className="w-full rounded-xl border-border bg-white h-12">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
@@ -379,7 +394,7 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
 
       <div>
         <h3 className="font-heading font-bold text-lg mb-4">Minimum Rating</h3>
-        <Select value={minRating} onValueChange={(val) => setMinRating(val || "all")}>
+        <Select value={minRating} onValueChange={(val) => handleFilterChange(() => setMinRating(val || "all"))}>
           <SelectTrigger className="w-full rounded-xl border-border bg-white h-12">
             <SelectValue placeholder="Any Rating" />
           </SelectTrigger>
@@ -485,8 +500,10 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                   onValueChange={(val) => {
                     if (!val) return;
                     const [s, o] = val.split("-");
-                    setSortBy(s);
-                    setOrder(o);
+                    handleFilterChange(() => {
+                      setSortBy(s);
+                      setOrder(o);
+                    });
                   }}
                 >
                   <SelectTrigger className="w-48 rounded-xl border-border bg-white h-10 text-sm">
@@ -537,15 +554,18 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
               </div>
             )}
 
-            {/* Pagination Placeholder */}
+            {/* Pagination Controls */}
             {meta && meta.last_page > 1 && (
               <div className="mt-16 flex justify-center">
-                {/* We can implement pagination components here later */}
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     className="rounded-xl border-border"
                     disabled={meta.current_page === 1}
+                    onClick={() => {
+                      setPage(meta.current_page - 1);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     Previous
                   </Button>
@@ -556,6 +576,10 @@ export default function ExploreView({ initialCategories, initialHandymen, initia
                     variant="outline"
                     className="rounded-xl border-border"
                     disabled={meta.current_page === meta.last_page}
+                    onClick={() => {
+                      setPage(meta.current_page + 1);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     Next
                   </Button>

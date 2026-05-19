@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
@@ -61,17 +61,20 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
   const [category, setCategory] = useState<string>(searchParams.get("category") || "all");
   const [sortBy, setSortBy] = useState<string>(searchParams.get("sort") || "created_at");
   const [order, setOrder] = useState<string>(searchParams.get("order") || "desc");
+  const [page, setPage] = useState<number>(() => Number(searchParams.get("page")) || 1);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => setIsMounted(true), []);
 
   // Debounce search
   useEffect(() => {
+    if (!isMounted) return;
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
+      setPage(1);
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, isMounted]);
 
   // Update URL
   useEffect(() => {
@@ -81,21 +84,29 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
     if (category !== "all") params.append("category", category);
     if (sortBy) params.append("sort", sortBy);
     if (order) params.append("order", order);
+    if (page > 1) params.append("page", page.toString());
 
     const queryString = params.toString();
     const url = queryString ? `/projects?${queryString}` : "/projects";
     router.replace(url, { scroll: false });
-  }, [debouncedSearch, category, sortBy, order, isMounted, router]);
+  }, [debouncedSearch, category, sortBy, order, page, isMounted, router]);
+
+  // Sync page from URL params if changed externally (e.g. back navigation)
+  useEffect(() => {
+    const pg = Number(searchParams.get("page")) || 1;
+    if (pg !== page) setPage(pg);
+  }, [searchParams]);
 
   // Query projects
   const { data: projectsData, isLoading } = useQuery({
-    queryKey: ["projects", debouncedSearch, category, sortBy, order],
+    queryKey: ["projects", debouncedSearch, category, sortBy, order, page],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (debouncedSearch) params.append("search", debouncedSearch);
       if (category !== "all") params.append("category", category);
       if (sortBy) params.append("sort", sortBy);
       if (order) params.append("order", order);
+      params.append("page", page.toString());
       params.append("per_page", "12");
 
       const response = await apiClient.get(`/portfolios?${params.toString()}`);
@@ -113,6 +124,12 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
     setCategory("all");
     setSortBy("created_at");
     setOrder("desc");
+    setPage(1);
+  };
+
+  const handleFilterChange = (updater: () => void) => {
+    updater();
+    setPage(1);
   };
 
   const FilterSidebar = () => (
@@ -123,7 +140,7 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
           <Button
             variant={category === "all" ? "secondary" : "ghost"}
             className="justify-start rounded-xl font-medium"
-            onClick={() => setCategory("all")}
+            onClick={() => handleFilterChange(() => setCategory("all"))}
           >
             {ct("all")}
           </Button>
@@ -132,7 +149,7 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
               key={cat.id}
               variant={category === cat.slug ? "secondary" : "ghost"}
               className="justify-start rounded-xl font-medium text-muted-foreground hover:text-primary"
-              onClick={() => setCategory(cat.slug)}
+              onClick={() => handleFilterChange(() => setCategory(cat.slug))}
             >
               {ct(cat.slug)}
             </Button>
@@ -235,8 +252,10 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
                   onValueChange={(val) => {
                     if (!val) return;
                     const [s, o] = val.split("-");
-                    setSortBy(s);
-                    setOrder(o);
+                    handleFilterChange(() => {
+                      setSortBy(s);
+                      setOrder(o);
+                    });
                   }}
                 >
                   <SelectTrigger className="w-48 rounded-xl border-border bg-white h-10 text-sm">
@@ -295,6 +314,10 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
                     variant="outline"
                     className="rounded-xl border-border"
                     disabled={meta.current_page === 1}
+                    onClick={() => {
+                      setPage(meta.current_page - 1);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     Previous
                   </Button>
@@ -305,6 +328,10 @@ export default function ProjectsView({ initialCategories, initialProjects }: Pro
                     variant="outline"
                     className="rounded-xl border-border"
                     disabled={meta.current_page === meta.last_page}
+                    onClick={() => {
+                      setPage(meta.current_page + 1);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     Next
                   </Button>
