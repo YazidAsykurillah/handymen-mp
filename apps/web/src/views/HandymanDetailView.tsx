@@ -152,7 +152,7 @@ export default function HandymanDetailView({ initialData, slug }: HandymanDetail
     );
   }
 
-  const profileSrc = handyman.photo_profile || "/images/placeholder-avatar.png";
+  const profileSrc = handyman.photo_profile || undefined;
 
   const whatsappUrl = handyman.whatsapp
     ? `https://wa.me/${handyman.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(t("whatsappMessage"))}`

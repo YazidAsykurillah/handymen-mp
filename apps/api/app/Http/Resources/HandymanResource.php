@@ -24,7 +24,7 @@ class HandymanResource extends JsonResource
             'whatsapp'      => $this->whatsapp,
             'photo_profile' => $this->photo_profile 
                 ? (filter_var($this->photo_profile, FILTER_VALIDATE_URL) ? $this->photo_profile : Storage::disk('public')->url($this->photo_profile)) 
-                : null,
+                : asset('images/placeholder.png'),
             'province_id'   => $this->province_id,
             'city_id'       => $this->city_id,
             'district_id'   => $this->district_id,

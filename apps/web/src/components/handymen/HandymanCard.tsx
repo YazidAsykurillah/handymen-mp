@@ -32,7 +32,7 @@ interface HandymanCardProps {
 
 export function HandymanCard({ handyman }: HandymanCardProps) {
   const ct = useTranslations("categories");
-  const profileSrc = handyman.photo_profile || "/images/placeholder-avatar.png";
+  const profileSrc = handyman.photo_profile;
 
   return (
     <Link href={`/handymen/${handyman.slug}`}>
