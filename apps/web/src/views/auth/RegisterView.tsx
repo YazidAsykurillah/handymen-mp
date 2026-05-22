@@ -183,7 +183,7 @@ export default function RegisterView({
       </div>
 
       {/* Right Panel — Form */}
-      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:p-12 md:pt-32">
+      <div className="flex-1 flex items-start justify-center p-6 pt-12 md:p-12 md:pt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
