@@ -56,7 +56,7 @@ export default function RegisterView({
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
 
-  const [tab, setTab] = useState("user");
+  const [tab, setTab] = useState("handyman");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
